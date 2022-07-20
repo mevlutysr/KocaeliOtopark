@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         marginTop:'10%',
         marginLeft:'15%',
         alignItems: "center",
-      },
+    },
     textGiris: {
       textAlign:'center',
       textShadowColor:'#00FF00',
