@@ -5,6 +5,8 @@ import HomeScreen from './screens/home';
 import OtoparkScreen from './screens/otopark';
 import AracScreen from './screens/arac';
 import ProfilScreen from './screens/profil';
+import UyeScreen from './screens/uye';
+import KayıtlıUyeScreen from './screens/kayıtlıUye';
 
 
 const Stack = createNativeStackNavigator();
@@ -17,6 +19,8 @@ const MyStack = () => {
         <Stack.Screen name="Otopark" component={OtoparkScreen}/>
         <Stack.Screen name="Arac" component={AracScreen}/>
         <Stack.Screen name="Profil" component={ProfilScreen}/>
+        <Stack.Screen name="Uye" component={UyeScreen}/>
+        <Stack.Screen name="KayıtlıUye" component={KayıtlıUyeScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

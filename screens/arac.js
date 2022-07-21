@@ -22,6 +22,7 @@ const Arac = () => {
                 placeholder="PLAKANIZI GİRİNİZ" 
                 placeholderTextColor="#fff"
                 onChangeText={(plaka) => setPlaka(plaka)}
+                maxLength={10}
                 />
             </View>
         <TouchableOpacity style={styles.sorgulaBtn}>
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
     },
     textInput:{
+        width:'100%',
         color:'#fff',
         marginTop:'2%',
         textAlign:'center',

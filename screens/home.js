@@ -1,10 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View,Image,TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
 
   const navigation = useNavigation();
+
+  const control = () => {
+      try {
+        AsyncStorage.getItem('AdSoyad')
+        .then(value => {if (value != null){navigation.navigate('KayıtlıUye')}else{navigation.navigate('Profil')}}) 
+      } catch (error) {
+        console.log(error);
+      }
+
+  }
+  
   
   return (
     <View style={styles.container}>
@@ -32,7 +44,7 @@ const Home = () => {
         <Text style={styles.textArac}>ARACIM NEREYE ÇEKİLDİ ?</Text>
       </View>
       </TouchableHighlight>
-      <TouchableHighlight style={styles.touchProfil}  onPress={() => navigation.navigate('Profil')}>
+      <TouchableHighlight style={styles.touchProfil}  onPress={control}>
       <View style={styles.row}>
         <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/16/16363.png'}}
              style={{width:'20%' , height:'70%',marginTop:'5%', marginLeft:'8%'}}/>

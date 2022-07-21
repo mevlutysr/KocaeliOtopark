@@ -1,13 +1,35 @@
 import React,{useState} from 'react';
-import {View,Text,StyleSheet,Image,TouchableOpacity} from 'react-native';
+import {View,Text,StyleSheet,Image,TouchableOpacity, Alert} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-
-
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profil = () => {
 
+    const navigation = useNavigation();
+
+    const [connect, setConnect] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const control = () =>{
+        try{
+            if (AsyncStorage.getItem('Email') != email ){
+                Alert.alert('Lütfen bilgilerinizi doğru girdiğinizden emin olunuz.')
+            }else if (AsyncStorage.getItem('Password') != password){
+                Alert.alert('Lütfen bilgilerinizi doğru girdiğinizden emin olunuz.')
+            }else{
+                setConnect(true);
+                navigation.navigate('Home');
+            }
+
+            
+
+        }catch (error){
+            console.log(error);
+        }
+        
+    }
 
     return(
         <View>
@@ -38,10 +60,10 @@ const Profil = () => {
             <TouchableOpacity>
                 <Text style={styles.unutBtn}>Şifremi Unuttum?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.girisBtn}>
+            <TouchableOpacity style={styles.girisBtn} onPress={control}>
                 <Text style={styles.textBtn}>GİRİŞ</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.uyeBtn}>
+            <TouchableOpacity style={styles.uyeBtn} onPress={() => navigation.navigate('Uye')}>
                 <Text style={styles.textBtn}>ÜYE OL</Text>
             </TouchableOpacity>
         </View> 
@@ -76,6 +98,7 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
     },
     textInput:{
+        width:'100%',
         color:'#fff',
         marginTop:'2%',
         textAlign:'center',
