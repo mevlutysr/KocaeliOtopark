@@ -1,34 +1,19 @@
-import React,{useState} from 'react';
-import {View,Text,StyleSheet,Image,TouchableOpacity, Alert} from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import React,{useState,useEffect} from 'react';
+import {View,Text,StyleSheet,Image,TouchableOpacity, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+
 
 const Profil = () => {
 
     const navigation = useNavigation();
 
-    const [connect, setConnect] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const control = () =>{
-        try{
-            if (AsyncStorage.getItem('Email') != email ){
-                Alert.alert('Lütfen bilgilerinizi doğru girdiğinizden emin olunuz.')
-            }else if (AsyncStorage.getItem('Password') != password){
-                Alert.alert('Lütfen bilgilerinizi doğru girdiğinizden emin olunuz.')
-            }else{
-                setConnect(true);
-                navigation.navigate('Home');
-            }
-
-            
-
-        }catch (error){
-            console.log(error);
-        }
-        
+        AsyncStorage.getItem('AdSoyad')
+        .then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
     }
 
     return(

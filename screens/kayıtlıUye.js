@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingView, Alert} from 'react-native';
+import React,{ useState,useEffect } from 'react';
+import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,32 +10,62 @@ const KayıtlıUye = () => {
     const [plaka, setPlaka] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
-    const navigation = useNavigation();
 
+    const navigation = useNavigation();
+    
+    useEffect(() => {
+        getData();
+    }, []);
+
+    const getData = () => {
+        AsyncStorage.getItem('AdSoyad')
+        .then(value => {if (value != null){setAdSoyad(value)}})
+        AsyncStorage.getItem('Telefon')
+        .then(value => {if (value != null){setTelefon(value)}})
+        AsyncStorage.getItem('Plaka')
+        .then(value => {if (value != null){setPlaka(value)}})
+        AsyncStorage.getItem('Email')
+        .then(value => {if (value != null){setEmail(value)}})
+        AsyncStorage.getItem('Password')
+        .then(value => {if (value != null){setPassword(value)}})
+       
+    }
     const setData = async () =>{
         
         try{
-            AsyncStorage.getItem('AdSoyad')
-            .then(value => {if (value != null){setAdSoyad(value)}})
-            AsyncStorage.getItem('Telefon')
-            .then(value => {if (value != null){setTelefon(value)}})
-            AsyncStorage.getItem('Plaka')
-            .then(value => {if (value != null){setPlaka(value)}})
-            AsyncStorage.getItem('Email')
-            .then(value => {if (value != null){setEmail(value)}})
-            AsyncStorage.getItem('Password')
-            .then(value => {if (value != null){setPassword(value)}})
+            await AsyncStorage.setItem('AdSoyad',adSoyad);
+            await AsyncStorage.setItem('Telefon',telefon);
+            await AsyncStorage.setItem('Plaka',plaka);
+            await AsyncStorage.setItem('Email',email);
+            await AsyncStorage.setItem('Password',password);
+            navigation.navigate('KayıtlıUye');
+            
         }catch (error) {
             console.log(error);
         }
         
     }
 
+    const removeData = async () => {
+
+        try {
+            await AsyncStorage.removeItem('AdSoyad');
+            await AsyncStorage.removeItem('Telefon');
+            await AsyncStorage.removeItem('Plaka');
+            await AsyncStorage.removeItem('Email');
+            await AsyncStorage.removeItem('Password');
+            navigation.navigate('Profil');
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return(
 
-        <KeyboardAvoidingView behavior='position'>
-        <View>   
+        <KeyboardAvoidingView behavior='padding'>
+           
             <View style={styles.viewConteiner}>
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                 style={{width:'65%' , height:'100%' }}/>
@@ -45,49 +75,62 @@ const KayıtlıUye = () => {
             <>
                 <Text style={styles.textGiris}>Profilim</Text>
             </>
+            <Text style={styles.textBaslik}>AD SOYAD</Text>
             <View style={styles.inputView}>
+                
                 <TextInput style={styles.textInput} 
-                placeholder={adSoyad}
+                placeholder='AdSoyad'
+                value={adSoyad}
                 placeholderTextColor="#fff"
                 onChangeText={(adSoyad) => setAdSoyad(adSoyad)}
                 />
             </View>
+            <Text style={styles.textBaslik}>TELEFON</Text>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder={telefon}
+                placeholder='Telefon'
+                value={telefon}
                 placeholderTextColor="#fff"
                 keyboardType='numeric'
                 maxLength={11}
                 onChangeText={(telefon) => setTelefon(telefon)}
                 />
             </View>
+            <Text style={styles.textBaslik}>PLAKA</Text>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder={plaka} 
+                placeholder='Plaka'
+                value={plaka} 
                 placeholderTextColor="#fff"
                 maxLength={10}
                 onChangeText={(plaka) => setPlaka(plaka)}
                 />
             </View>
+            <Text style={styles.textBaslik}>E-MAİL</Text>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder={email} 
+                placeholder='Email'
+                value={email}
                 placeholderTextColor="#fff"
                 onChangeText={(email) => setEmail(email)}
                 />
             </View>
+            <Text style={styles.textBaslik}>ŞİFRE</Text>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder={password}
+                placeholder='Sifre'
+                value={password}
                 placeholderTextColor="#fff"
-                secureTextEntry={true}
                 onChangeText={(password) => setPassword(password)}
                 />
             </View>        
             <TouchableOpacity style={styles.kayıtBtn} onPress={setData}>
                 <Text style={styles.textBtn}>GÜNCELLE</Text>
             </TouchableOpacity>
-        </View>
+            <TouchableOpacity style={styles.removeBtn} onPress={removeData}>
+                <Text style={styles.textBtn}>ÇIKIŞ</Text>
+            </TouchableOpacity>
+        
         </KeyboardAvoidingView>
     )
 }
@@ -107,7 +150,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         width: "70%",
         height: 45,
-        marginTop:'10%',
+        marginTop:'3%',
         marginLeft:'15%',
         alignItems: "center",
     },
@@ -116,7 +159,14 @@ const styles = StyleSheet.create({
         textShadowColor:'#00FF00',
         fontSize:23,
         color:'#0085FF',
-        marginTop:'15%',
+        marginTop:'10%',
+        fontWeight:'bold',
+    },
+    textBaslik: {
+        marginTop:'3%',
+        marginLeft:'20%',
+        fontSize:15,
+        color:'#0085FF',
         fontWeight:'bold',
     },
     textInput:{
@@ -138,8 +188,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginLeft:'10%',
-        marginTop: '17%',
+        marginTop: '10%',
         backgroundColor: "#008000",
+    },
+    removeBtn: {
+        width: "80%",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft:'10%',
+        marginTop:'5%',
+        backgroundColor: "#DB2B30",
     },
 });
 

@@ -3,6 +3,7 @@ import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingVi
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
+
 const Uye = () => {
 
     const [adSoyad, setAdSoyad] = useState("");
@@ -10,44 +11,35 @@ const Uye = () => {
     const [plaka, setPlaka] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const navigation = useNavigation();
 
-    const setData = async () =>{
-        if (adSoyad.length == 0){
-            Alert.alert('Lütfen boş alan bırakmayınız!!')
-            console.log(adSoyad);
-        }else if (email.length == 0){
-            Alert.alert('Lütfen boş alan bırakmayınız!!')
-        }else if (telefon.length == 0){
-            Alert.alert('Lütfen boş alan bırakmayınız!!')
-        }else if (plaka.length == 0){
-            Alert.alert('Lütfen boş alan bırakmayınız!!')
-        }else if (password.length == 0){
-            Alert.alert('Lütfen boş alan bırakmayınız!!')
-        }else{
-            try{
-                await AsyncStorage.setItem('AdSoyad',adSoyad);
-                await AsyncStorage.setItem('Telefon',telefon);
-                await AsyncStorage.setItem('Plaka',plaka);
-                await AsyncStorage.setItem('Email',email);
-                await AsyncStorage.setItem('Password',password);
-                navigation.navigate('kayıtlıUye');
 
-            }catch (error) {
-                console.log(error);
-            }
+    const setData = async () =>{
+        if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
+            Alert.alert('Lütfen boş alan bırakmayınız!!');
+        }else{
+            
+            await AsyncStorage.setItem('AdSoyad',adSoyad);
+            await AsyncStorage.setItem('Telefon',telefon);
+            await AsyncStorage.setItem('Plaka',plaka);
+            await AsyncStorage.setItem('Email',email);
+            await AsyncStorage.setItem('Password',password);
+
+                
+            navigation.navigate('KayıtlıUye');
         }
+        
     }
+
 
     return(
 
-        <KeyboardAvoidingView behavior='position'>
-        <View>   
+        <KeyboardAvoidingView behavior='padding'>       
             <View style={styles.viewConteiner}>
-                <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
+                <Image source={{uri: 'https:www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                 style={{width:'65%' , height:'100%' }}/>
-                <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
+                <Image source={{uri: 'https:play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
                 style={{width:'20%' , height:90, marginLeft:'10%'}}/> 
             </View>
             <>
@@ -95,7 +87,6 @@ const Uye = () => {
             <TouchableOpacity style={styles.kayıtBtn} onPress={setData}>
                 <Text style={styles.textBtn}>KAYIT OL</Text>
             </TouchableOpacity>
-        </View>
         </KeyboardAvoidingView>
     )
 }

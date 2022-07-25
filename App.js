@@ -9,6 +9,7 @@ import UyeScreen from './screens/uye';
 import KayıtlıUyeScreen from './screens/kayıtlıUye';
 
 
+
 const Stack = createNativeStackNavigator();
 
 const MyStack = () => {

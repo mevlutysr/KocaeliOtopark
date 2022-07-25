@@ -1,23 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View,Image,TouchableHighlight } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Home = () => {
 
   const navigation = useNavigation();
 
   const control = () => {
-      try {
-        AsyncStorage.getItem('AdSoyad')
-        .then(value => {if (value != null){navigation.navigate('KayıtlıUye')}else{navigation.navigate('Profil')}}) 
-      } catch (error) {
-        console.log(error);
-      }
-
-  }
-  
-  
+    //AsyncStorage.getItem('AdSoyad')
+    //.then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
+    navigation.navigate('Profil');
+}  
   return (
     <View style={styles.container}>
       <View style={styles.viewConteiner}>
