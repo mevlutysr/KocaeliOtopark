@@ -1,11 +1,20 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput} from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Arac = () => {
 
     const [plaka, setPlaka] = useState("");
+    
+    useEffect(() => {
+        getPlaka();
+    }, []);
 
+    const getPlaka = () => {
+        AsyncStorage.getItem('Plaka')
+        .then(value => {if (value != null){setPlaka(value)}})
+    }
+    
     return(
     <View>
         <View style={styles.viewConteiner}>
@@ -19,7 +28,8 @@ const Arac = () => {
         </>
         <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder="PLAKANIZI GİRİNİZ" 
+                placeholder="PLAKANIZI GİRİNİZ"
+                value={plaka}
                 placeholderTextColor="#fff"
                 onChangeText={(plaka) => setPlaka(plaka)}
                 maxLength={10}
@@ -38,7 +48,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     viewConteiner: {
-        marginTop:'10%',
+        marginTop:'2%',
         marginLeft:'5%',
         flexDirection:'row',
     },

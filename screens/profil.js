@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {View,Text,StyleSheet,Image,TouchableOpacity, TextInput} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import { auth } from '../config/firebase';
 
 const Profil = () => {
 
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
     },
     viewConteiner: {
-      marginTop:'10%',
+      marginTop:'2%',
       marginLeft:'5%',
       flexDirection:'row',
     },

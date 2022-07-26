@@ -1,8 +1,9 @@
 import React,{useState} from 'react';
 import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingView, Alert} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { db } from '../config/firebase';
+import { collection, setDoc,doc } from "firebase/firestore";
 
 const Uye = () => {
 
@@ -11,22 +12,30 @@ const Uye = () => {
     const [plaka, setPlaka] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    
+    
     const navigation = useNavigation();
-
 
     const setData = async () =>{
         if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
             Alert.alert('Lütfen boş alan bırakmayınız!!');
         }else{
             
-            await AsyncStorage.setItem('AdSoyad',adSoyad);
-            await AsyncStorage.setItem('Telefon',telefon);
-            await AsyncStorage.setItem('Plaka',plaka);
-            await AsyncStorage.setItem('Email',email);
-            await AsyncStorage.setItem('Password',password);
+            try {
+                const docRef = collection(db, "users")
 
-                
+                await setDoc(doc(docRef,email),{
+                    adSoyad:{adSoyad},
+                    telefon:{telefon},
+                    plaka:{plaka},
+                    email:{email},
+                    password:{password}
+                });
+                console.log("Document written with ID: ", docRef.id);
+                Alert.alert("İşlem Başarılı!!");
+            } catch (error) {
+                console.log(error);
+            }
             navigation.navigate('KayıtlıUye');
         }
         
@@ -35,7 +44,7 @@ const Uye = () => {
 
     return(
 
-        <KeyboardAvoidingView behavior='padding'>       
+        <KeyboardAwareScrollView >       
             <View style={styles.viewConteiner}>
                 <Image source={{uri: 'https:www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                 style={{width:'65%' , height:'100%' }}/>
@@ -87,7 +96,7 @@ const Uye = () => {
             <TouchableOpacity style={styles.kayıtBtn} onPress={setData}>
                 <Text style={styles.textBtn}>KAYIT OL</Text>
             </TouchableOpacity>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -97,7 +106,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },  
         viewConteiner: {
-        marginTop:'10%',
+        marginTop:'2%',
         marginLeft:'5%',
         flexDirection:'row',
     },

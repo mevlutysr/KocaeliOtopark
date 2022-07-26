@@ -9,9 +9,9 @@ const Home = () => {
   const navigation = useNavigation();
 
   const control = () => {
-    //AsyncStorage.getItem('AdSoyad')
-    //.then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
-    navigation.navigate('Profil');
+    AsyncStorage.getItem('email')
+    .then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
+    
 }  
   return (
     <View style={styles.container}>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   viewConteiner: {
-    marginTop:'10%',
+    marginTop:'2%',
     marginLeft:'5%',
     flexDirection:'row',
   },

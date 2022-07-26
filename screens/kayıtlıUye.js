@@ -1,7 +1,8 @@
 import React,{ useState,useEffect } from 'react';
-import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingView } from 'react-native';
+import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const KayıtlıUye = () => {
 
@@ -64,7 +65,7 @@ const KayıtlıUye = () => {
 
     return(
 
-        <KeyboardAvoidingView behavior='padding'>
+        <KeyboardAwareScrollView >
            
             <View style={styles.viewConteiner}>
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
@@ -131,7 +132,7 @@ const KayıtlıUye = () => {
                 <Text style={styles.textBtn}>ÇIKIŞ</Text>
             </TouchableOpacity>
         
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },  
         viewConteiner: {
-        marginTop:'10%',
+        marginTop:'2%',
         marginLeft:'5%',
         flexDirection:'row',
     },

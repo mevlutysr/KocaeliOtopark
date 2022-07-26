@@ -20,7 +20,7 @@ flex: 1,
 backgroundColor: '#fff',
 },
 viewConteiner: {
-marginTop:'10%',
+marginTop:'2%',
 marginLeft:'5%',
 flexDirection:'row',
 },
