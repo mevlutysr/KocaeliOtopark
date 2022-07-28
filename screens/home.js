@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AppContext from '../context/appContext';
 
 const Home = () => {
 
+  const {isLogin} = useContext(AppContext)
   const navigation = useNavigation();
 
   const control = () => {
-    AsyncStorage.getItem('email')
-    .then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
-    
-}  
+    if (isLogin == true){
+    navigation.navigate('KayıtlıUye');
+    }else{
+      navigation.navigate('Profil');
+    }
+  }  
   return (
     <View style={styles.container}>
       <View style={styles.viewConteiner}>

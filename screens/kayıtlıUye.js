@@ -1,17 +1,28 @@
-import React,{ useState,useEffect } from 'react';
-import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React,{ useState,useEffect, useContext } from 'react';
+import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import {db } from '../config/firebase';
+import { collection, doc,query,where, onSnapshot,updateDoc} from "firebase/firestore";
+import AppContext from '../context/appContext';
+
+
 
 const KayıtlıUye = () => {
 
-    const [adSoyad, setAdSoyad] = useState("");
-    const [telefon, setTelefon] = useState("");
-    const [plaka, setPlaka] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
+    
+    const { 
+        adSoyad,setAdSoyad,
+        telefon,setTelefon,
+        plaka,setPlaka,
+        email,setEmail,
+        password,setPassword,
+        id,setId,
+        setIsLogin
+    } = useContext(AppContext)
+    
+    
+    const val = [];
     const navigation = useNavigation();
     
     useEffect(() => {
@@ -19,44 +30,61 @@ const KayıtlıUye = () => {
     }, []);
 
     const getData = () => {
-        AsyncStorage.getItem('AdSoyad')
-        .then(value => {if (value != null){setAdSoyad(value)}})
-        AsyncStorage.getItem('Telefon')
-        .then(value => {if (value != null){setTelefon(value)}})
-        AsyncStorage.getItem('Plaka')
-        .then(value => {if (value != null){setPlaka(value)}})
-        AsyncStorage.getItem('Email')
-        .then(value => {if (value != null){setEmail(value)}})
-        AsyncStorage.getItem('Password')
-        .then(value => {if (value != null){setPassword(value)}})
-       
+        const docRef =  collection(db, "users");
+        const q = query(docRef,where("email", "==", {email}));
+    
+        onSnapshot(q,(doc)=>{ 
+            doc.docs.forEach((doc)=> {
+                val.push({ ...doc.data()});
+            })
+            doc.docs.map((doc)=> {
+                setId(doc.id)
+            })  
+            val.map(todo =>{
+              setAdSoyad(todo.adSoyad.adSoyad)
+              setTelefon(todo.telefon.telefon)
+              setPlaka(todo.plaka.plaka)
+              setEmail(todo.email.email)
+              setPassword(todo.password.password)
+            })
+        })
     }
+
     const setData = async () =>{
         
-        try{
-            await AsyncStorage.setItem('AdSoyad',adSoyad);
-            await AsyncStorage.setItem('Telefon',telefon);
-            await AsyncStorage.setItem('Plaka',plaka);
-            await AsyncStorage.setItem('Email',email);
-            await AsyncStorage.setItem('Password',password);
-            navigation.navigate('KayıtlıUye');
-            
-        }catch (error) {
-            console.log(error);
-        }
         
+        if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
+            Alert.alert('Lütfen boş alan bırakmayınız!!');
+        }
+        else{
+            try {
+                const docRef = doc(db, "users", id);
+                await updateDoc(docRef,
+                {
+                    adSoyad:{adSoyad},
+                    telefon:{telefon},
+                    plaka:{plaka},
+                    email:{email},
+                    password:{password}
+                });
+                Alert.alert("Bilgiler Başarıyla Güncellendi!!");  
+            } catch (error) {
+                console.log(error);
+            }            
+        } 
     }
 
     const removeData = async () => {
 
         try {
-            await AsyncStorage.removeItem('AdSoyad');
-            await AsyncStorage.removeItem('Telefon');
-            await AsyncStorage.removeItem('Plaka');
-            await AsyncStorage.removeItem('Email');
-            await AsyncStorage.removeItem('Password');
-            navigation.navigate('Profil');
-            
+            setIsLogin(false);
+            setAdSoyad("");
+            setPlaka("");
+            setTelefon("");
+            setEmail("");
+            setPassword("");
+            setId("");
+            navigation.navigate('Profil');     
         } catch (error) {
             console.log(error);
         }

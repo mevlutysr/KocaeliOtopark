@@ -1,19 +1,19 @@
-import React,{useState,useEffect} from 'react';
+import React,{useContext} from 'react';
 import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppContext from '../context/appContext';
 
 const Arac = () => {
 
-    const [plaka, setPlaka] = useState("");
+    const {plaka,setPlaka} = useContext(AppContext)
     
-    useEffect(() => {
-        getPlaka();
-    }, []);
-
-    const getPlaka = () => {
-        AsyncStorage.getItem('Plaka')
-        .then(value => {if (value != null){setPlaka(value)}})
-    }
+    //useEffect(() => {
+    //    getPlaka();
+    //}, []);
+//
+    //const getPlaka = () => {
+    //    AsyncStorage.getItem('Plaka')
+    //    .then(value => {if (value != null){setPlaka(value)}})
+    //}
     
     return(
     <View>

@@ -1,23 +1,53 @@
-import React,{useState,useEffect} from 'react';
-import {View,Text,StyleSheet,Image,TouchableOpacity, TextInput} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React,{useContext, useEffect} from 'react';
+import {View,Text,StyleSheet,Image,TouchableOpacity, TextInput, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { auth } from '../config/firebase';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { db } from '../config/firebase';
+import { where , query, collection,onSnapshot } from 'firebase/firestore';
+import AppContext from '../context/appContext';
 
 const Profil = () => {
 
+    const {
+        email,setEmail,
+        password,setPassword,
+        setIsLogin,setId,id
+    } = useContext(AppContext)
     const navigation = useNavigation();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const control = () =>{
-        AsyncStorage.getItem('AdSoyad')
-        .then(value => {if (value != null){(navigation.navigate('KayıtlıUye'))}else{navigation.navigate('Profil')}})
+    const get = () => {
+        const docRef =  collection(db, "users");
+        const q = query(docRef,where("email", "==", {email}),where("password", "==", {password}));
+            
+        onSnapshot(q,(doc)=>{ 
+          doc.docs.map((doc)=> {
+            setId(doc.id)
+            })  
+        })
     }
 
+    const control = () => { 
+        if((password.length == 0 || email.length == 0)){
+            
+            Alert.alert('Lütfen boş alan bırakmayınız!!');
+        
+        }else{
+            
+            get();
+            const len = id.length
+            console.log(len)
+            if(len == 0){
+                Alert.alert("Lütfen doğru bilgi girdiğinizden emin olun!!");
+            }else{
+                setIsLogin(true);
+                navigation.navigate("KayıtlıUye");
+            }
+        
+    }
+}
+
     return(
-        <View>
+        <KeyboardAwareScrollView >
             <View style={styles.viewConteiner}>
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                 style={{width:'65%' , height:'100%' }}/>
@@ -29,7 +59,8 @@ const Profil = () => {
             </>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder="E-mail" 
+                placeholder="E-mail"
+                value={email}
                 placeholderTextColor="#fff"
                 onChangeText={(email) => setEmail(email)}
                 />
@@ -37,6 +68,7 @@ const Profil = () => {
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
                 placeholder="Password" 
+                value={password}
                 placeholderTextColor="#fff"
                 secureTextEntry={true}
                 onChangeText={(password) => setPassword(password)}
@@ -45,13 +77,13 @@ const Profil = () => {
             <TouchableOpacity>
                 <Text style={styles.unutBtn}>Şifremi Unuttum?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.girisBtn} onPress={control}>
-                <Text style={styles.textBtn}>GİRİŞ</Text>
+            <TouchableOpacity style={styles.girisBtn} >
+                <Text style={styles.textBtn} onPress={control}>GİRİŞ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.uyeBtn} onPress={() => navigation.navigate('Uye')}>
                 <Text style={styles.textBtn}>ÜYE OL</Text>
             </TouchableOpacity>
-        </View> 
+        </KeyboardAwareScrollView> 
     )
 }
 
@@ -114,6 +146,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#008000",
     },
     textBtn: {
+        width:'100%',
         textAlign:'center',
         color:'#fff',
         fontSize:15,

@@ -1,19 +1,24 @@
-import React,{useState} from 'react';
-import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity,KeyboardAvoidingView, Alert} from 'react-native';
+import React,{useContext, useState} from 'react';
+import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { db } from '../config/firebase';
 import { collection, setDoc,doc } from "firebase/firestore";
+import AppContext from '../context/appContext';
+
+
 
 const Uye = () => {
 
-    const [adSoyad, setAdSoyad] = useState("");
-    const [telefon, setTelefon] = useState("");
-    const [plaka, setPlaka] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    
-    
+    const {
+        adSoyad,setAdSoyad,
+        telefon,setTelefon,
+        plaka,setPlaka,
+        email,setEmail,
+        password,setPassword,
+        setIsLogin
+    } = useContext(AppContext);
+
     const navigation = useNavigation();
 
     const setData = async () =>{
@@ -22,16 +27,17 @@ const Uye = () => {
         }else{
             
             try {
+            
                 const docRef = collection(db, "users")
 
-                await setDoc(doc(docRef,email),{
+                await setDoc(doc(docRef),{
                     adSoyad:{adSoyad},
                     telefon:{telefon},
                     plaka:{plaka},
                     email:{email},
                     password:{password}
                 });
-                console.log("Document written with ID: ", docRef.id);
+                setIsLogin(true);
                 Alert.alert("İşlem Başarılı!!");
             } catch (error) {
                 console.log(error);
