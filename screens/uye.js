@@ -1,8 +1,9 @@
-import React,{useContext, useState} from 'react';
+import React,{useContext} from 'react';
 import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { db } from '../config/firebase';
+import { db,auth } from '../config/firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, setDoc,doc } from "firebase/firestore";
 import AppContext from '../context/appContext';
 
@@ -21,13 +22,28 @@ const Uye = () => {
 
     const navigation = useNavigation();
 
+    const processAuthError = (authError) => {
+        if(authError.includes('user-not-found')) {
+            Alert.alert('Kullanıcı bulunamadı')
+        } else if(authError.includes('wrong-password')) {
+            Alert.alert('Yanlış şifre')
+        } else if(authError.includes('email-already-in-use')) {
+            Alert.alert("Lütfen Başka Bir E-posta adresi giriniz")
+        } else if(authError.includes('network-request-failed')) {
+            Alert.alert('İnternet bağlantınızı kontrol ediniz.')
+        }else{
+          Alert.alert("Lütfen doğru bilgileri girdiğinizden emin olunuz")
+        }
+      }
+
     const setData = async () =>{
         if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
             Alert.alert('Lütfen boş alan bırakmayınız!!');
         }else{
             
             try {
-            
+
+                await createUserWithEmailAndPassword(auth, email, password)
                 const docRef = collection(db, "users")
 
                 await setDoc(doc(docRef),{
@@ -39,10 +55,11 @@ const Uye = () => {
                 });
                 setIsLogin(true);
                 Alert.alert("İşlem Başarılı!!");
+                navigation.navigate('KayıtlıUye');
             } catch (error) {
-                console.log(error);
+                const errorCode = error.code
+                processAuthError(errorCode)
             }
-            navigation.navigate('KayıtlıUye');
         }
         
     }

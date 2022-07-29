@@ -6,15 +6,6 @@ const Arac = () => {
 
     const {plaka,setPlaka} = useContext(AppContext)
     
-    //useEffect(() => {
-    //    getPlaka();
-    //}, []);
-//
-    //const getPlaka = () => {
-    //    AsyncStorage.getItem('Plaka')
-    //    .then(value => {if (value != null){setPlaka(value)}})
-    //}
-    
     return(
     <View>
         <View style={styles.viewConteiner}>

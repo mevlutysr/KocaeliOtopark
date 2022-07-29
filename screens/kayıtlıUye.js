@@ -1,10 +1,11 @@
-import React,{ useState,useEffect, useContext } from 'react';
+import React,{ useEffect, useContext } from 'react';
 import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {db } from '../config/firebase';
+import { auth, db } from '../config/firebase';
 import { collection, doc,query,where, onSnapshot,updateDoc} from "firebase/firestore";
 import AppContext from '../context/appContext';
+import { signOut, updatePassword, updateEmail} from 'firebase/auth';
 
 
 
@@ -28,6 +29,19 @@ const KayıtlıUye = () => {
     useEffect(() => {
         getData();
     }, []);
+    const processAuthError = (authError) => {
+        if(authError.includes('user-not-found')) {
+            Alert.alert('Kullanıcı bulunamadı')
+        } else if(authError.includes('wrong-password')) {
+            Alert.alert('Yanlış şifre')
+        } else if(authError.includes('email-already-in-use')) {
+            Alert.alert("Lütfen Başka Bir E-posta adresi giriniz")
+        } else if(authError.includes('network-request-failed')) {
+            Alert.alert('İnternet bağlantınızı kontrol ediniz.')
+        }else{
+          Alert.alert("Lütfen doğru bilgileri girdiğinizden emin olunuz")
+        }
+      }
 
     const getData = () => {
         const docRef =  collection(db, "users");
@@ -58,6 +72,9 @@ const KayıtlıUye = () => {
         }
         else{
             try {
+                const user = auth.currentUser
+                await updateEmail(user,email)
+                await updatePassword(user,password)
                 const docRef = doc(db, "users", id);
                 await updateDoc(docRef,
                 {
@@ -67,14 +84,17 @@ const KayıtlıUye = () => {
                     email:{email},
                     password:{password}
                 });
-                Alert.alert("Bilgiler Başarıyla Güncellendi!!");  
+                Alert.alert("Bilgiler Başarıyla Güncellendi!!");
+                getData();  
             } catch (error) {
-                console.log(error);
+                const errorCode = error.code
+                processAuthError(errorCode)
+                console.log(errorCode)
             }            
         } 
     }
 
-    const removeData = async () => {
+    const removeData =  () => {
 
         try {
             setIsLogin(false);
@@ -84,6 +104,7 @@ const KayıtlıUye = () => {
             setEmail("");
             setPassword("");
             setId("");
+            signOut(auth);
             navigation.navigate('Profil');     
         } catch (error) {
             console.log(error);

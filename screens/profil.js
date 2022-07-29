@@ -1,9 +1,9 @@
-import React,{useContext, useEffect} from 'react';
+import React,{useContext} from 'react';
 import {View,Text,StyleSheet,Image,TouchableOpacity, TextInput, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { db } from '../config/firebase';
-import { where , query, collection,onSnapshot } from 'firebase/firestore';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from "firebase/auth";
 import AppContext from '../context/appContext';
 
 const Profil = () => {
@@ -15,34 +15,29 @@ const Profil = () => {
     } = useContext(AppContext)
     const navigation = useNavigation();
 
-    const get = () => {
-        const docRef =  collection(db, "users");
-        const q = query(docRef,where("email", "==", {email}),where("password", "==", {password}));
-            
-        onSnapshot(q,(doc)=>{ 
-          doc.docs.map((doc)=> {
-            setId(doc.id)
-            })  
-        })
-    }
-
-    const control = () => { 
-        if((password.length == 0 || email.length == 0)){
-            
-            Alert.alert('Lütfen boş alan bırakmayınız!!');
-        
+    const processAuthError = (authError) => {
+        if(authError.includes('user-not-found')) {
+            Alert.alert('Kullanıcı bulunamadı')
+        } else if(authError.includes('wrong-password')) {
+            Alert.alert('Yanlış şifre')
+        } else if(authError.includes('email-already-in-use')) {
+            Alert.alert("Lütfen Başka Bir E-posta adresi giriniz")
+        } else if(authError.includes('network-request-failed')) {
+            Alert.alert('İnternet bağlantınızı kontrol ediniz.')
         }else{
-            
-            get();
-            const len = id.length
-            console.log(len)
-            if(len == 0){
-                Alert.alert("Lütfen doğru bilgi girdiğinizden emin olun!!");
-            }else{
-                setIsLogin(true);
-                navigation.navigate("KayıtlıUye");
-            }
-        
+          Alert.alert("Lütfen doğru bilgileri girdiğinizden emin olunuz")
+        }
+      }
+
+    const control = async () => { 
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      setIsLogin(true)
+      navigation.navigate('KayıtlıUye')
+    } catch (error) {
+      const errorCode = error.code
+      processAuthError(errorCode)
     }
 }
 
@@ -77,8 +72,8 @@ const Profil = () => {
             <TouchableOpacity>
                 <Text style={styles.unutBtn}>Şifremi Unuttum?</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.girisBtn} >
-                <Text style={styles.textBtn} onPress={control}>GİRİŞ</Text>
+            <TouchableOpacity style={styles.girisBtn} onPress={control}>
+                <Text style={styles.textBtn} >GİRİŞ</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.uyeBtn} onPress={() => navigation.navigate('Uye')}>
                 <Text style={styles.textBtn}>ÜYE OL</Text>
