@@ -1,18 +1,24 @@
 import React,{useContext} from 'react';
 import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput} from 'react-native';
 import AppContext from '../context/appContext';
-
+import { useNavigation } from '@react-navigation/native';
 const Arac = () => {
 
     const {plaka,setPlaka} = useContext(AppContext)
+    const navigation = useNavigation();
     
     return(
     <View>
         <View style={styles.viewConteiner}>
+            <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
+                <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
+            </TouchableOpacity>
             <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
-                style={{width:'65%' , height:'100%' }}/>
-            <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
-                style={{width:'20%' , height:90, marginLeft:'10%'}}/> 
+                style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
+            
+            <TouchableOpacity style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
+            </TouchableOpacity>
         </View>
         <>
             <Text style={styles.textGiris}>ÇEKİLEN ARAÇ SORGULAMA</Text>

@@ -11,7 +11,7 @@ const Profil = () => {
     const {
         email,setEmail,
         password,setPassword,
-        setIsLogin,setId,id
+        setIsLogin,setLoader,
     } = useContext(AppContext)
     const navigation = useNavigation();
 
@@ -32,22 +32,30 @@ const Profil = () => {
     const control = async () => { 
     
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-      setIsLogin(true)
-      navigation.navigate('KayıtlıUye')
-    } catch (error) {
-      const errorCode = error.code
-      processAuthError(errorCode)
+        setLoader(true);
+        await signInWithEmailAndPassword(auth, email, password)
+        setIsLogin(true)
+        setLoader(false)
+        navigation.navigate('KayıtlıUye')
+    }catch (error) {
+        const errorCode = error.code
+        processAuthError(errorCode)
+        setLoader(false)
     }
 }
 
     return(
         <KeyboardAwareScrollView >
             <View style={styles.viewConteiner}>
+                <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
+                    <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
+                </TouchableOpacity>
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
-                style={{width:'65%' , height:'100%' }}/>
-                <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
-                 style={{width:'20%' , height:90, marginLeft:'10%'}}/> 
+                    style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
+                
+                <TouchableOpacity style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                    <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
+                </TouchableOpacity>
             </View>
             <>
                 <Text style={styles.textGiris}>GİRİŞ</Text>

@@ -11,7 +11,11 @@ export const AppProvider = ({children}) => {
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
     const [id,setId] = useState("")
+    const [latitude,setLatitude] = useState("")
+    const [longitude,setLongitude] = useState("")
     const [isLogin,setIsLogin] = useState(false)
+    const [loader,setLoader] = useState(false)
+
 
     const data = {
         adSoyad,setAdSoyad,
@@ -20,8 +24,12 @@ export const AppProvider = ({children}) => {
         email,setEmail,
         password,setPassword,
         id,setId,
-        isLogin,setIsLogin
+        isLogin,setIsLogin,
+        loader,setLoader,
+        longitude,setLongitude,
+        latitude,setLatitude,
     }
+
     return(
         <AppContext.Provider value = {data}>
             {children}

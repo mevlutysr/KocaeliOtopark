@@ -19,7 +19,7 @@ const KayıtlıUye = () => {
         email,setEmail,
         password,setPassword,
         id,setId,
-        setIsLogin
+        setIsLogin,setLoader,
     } = useContext(AppContext)
     
     
@@ -30,13 +30,7 @@ const KayıtlıUye = () => {
         getData();
     }, []);
     const processAuthError = (authError) => {
-        if(authError.includes('user-not-found')) {
-            Alert.alert('Kullanıcı bulunamadı')
-        } else if(authError.includes('wrong-password')) {
-            Alert.alert('Yanlış şifre')
-        } else if(authError.includes('email-already-in-use')) {
-            Alert.alert("Lütfen Başka Bir E-posta adresi giriniz")
-        } else if(authError.includes('network-request-failed')) {
+        if(authError.includes('network-request-failed')) {
             Alert.alert('İnternet bağlantınızı kontrol ediniz.')
         }else{
           Alert.alert("Lütfen doğru bilgileri girdiğinizden emin olunuz")
@@ -66,8 +60,9 @@ const KayıtlıUye = () => {
 
     const setData = async () =>{
         
-        
+        setLoader(true)
         if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
+            setLoader(false)
             Alert.alert('Lütfen boş alan bırakmayınız!!');
         }
         else{
@@ -84,11 +79,13 @@ const KayıtlıUye = () => {
                     email:{email},
                     password:{password}
                 });
+                setLoader(false);
                 Alert.alert("Bilgiler Başarıyla Güncellendi!!");
-                getData();  
+                getData(); 
             } catch (error) {
                 const errorCode = error.code
                 processAuthError(errorCode)
+                setLoader(false)
                 console.log(errorCode)
             }            
         } 
@@ -116,11 +113,16 @@ const KayıtlıUye = () => {
 
         <KeyboardAwareScrollView >
            
-            <View style={styles.viewConteiner}>
+           <View style={styles.viewConteiner}>
+                <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
+                    <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
+                </TouchableOpacity>
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
-                style={{width:'65%' , height:'100%' }}/>
-                <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
-                style={{width:'20%' , height:90, marginLeft:'10%'}}/> 
+                    style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
+                
+                <TouchableOpacity style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                    <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
+                </TouchableOpacity>
             </View>
             <>
                 <Text style={styles.textGiris}>Profilim</Text>
