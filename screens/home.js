@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext,useEffect } from 'react';
 import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AppContext from '../context/appContext';
@@ -6,8 +6,50 @@ import * as Location from 'expo-location';
 
 const Home = () => {
 
-  const {isLogin,setLoader,setLatitude,setLongitude,longitude,latitude} = useContext(AppContext)
+  const {isLogin,setLoader,setLatitude,setLongitude,longitude,latitude,setCarData} = useContext(AppContext)
   const navigation = useNavigation();
+
+  useEffect(()=> {
+    const getLocation = async()=>{
+      let { status } =  await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
+
+      let {coords} =  await Location.getCurrentPositionAsync();
+      if (coords){
+        await setLatitude(coords.latitude);
+        await setLongitude(coords.longitude);
+      }
+    }
+    
+
+    const getCarData=()=>{
+      
+      const fet = fetch('', {
+        method: 'POST',
+        headers: {
+          Authorization:'',
+          'Content-Type': ''
+        },
+        body: JSON.stringify({
+          
+          latitude: latitude,
+          longitude: longitude
+        })
+        });
+    
+        fet.then((value) => value.json()).then((json)=> setCarData(json)).catch((error) => console.error(error))
+      }
+
+    getLocation();
+
+    getCarData();
+   
+    
+  },[])
 
   const control = () => {
     if (isLogin == true){
@@ -17,23 +59,12 @@ const Home = () => {
     }
   }
   
-  const maps = async () => {
+  const getMaps = () => {
     setLoader(true)
-
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
-      return;
-    }
-    let {coords} = await Location.getCurrentPositionAsync();
-    
-    if (coords){
-      const {latitude,longitude} = coords;
-      setLatitude(latitude);
-      setLongitude(longitude);
-    }
-    setLoader(false)
-    navigation.navigate("Otopark")
+    setTimeout(()=>{
+      setLoader(false)
+      navigation.navigate("Otopark")  
+    },2000)  
   }
 
   return (
@@ -48,7 +79,7 @@ const Home = () => {
       <Image source={{uri: 'https://www.kocaeli.bel.tr/webfiles/userfiles/images/haberler/2018/2018_ocak/2018_01_24/%C4%B0zmit%20Kent%20Meydan%C4%B1%20h%C4%B1zla%20ilerliyor%201.jpg'}}
              style={{width:'100%' , height:'40%',marginTop:'2%',marginBottom:'1%' }}/>
       </>
-      <TouchableHighlight style={styles.touchOtopark}  onPress={maps}>      
+      <TouchableHighlight style={styles.touchOtopark}  onPress={getMaps}>      
       <View style={styles.row}>
         <Image source={{uri: 'https://bursaelektronet.com/wp-content/uploads/2018/02/497_1.png'}}
              style={{width:'45%' , height:'70%',marginTop:'3%', }}/>

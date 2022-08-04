@@ -1,16 +1,19 @@
 import React,{useContext} from 'react';
-import {View,Text,StyleSheet,Image, TouchableOpacity} from 'react-native';
+import {View,Text,StyleSheet,Image, TouchableOpacity,FlatList,Button} from 'react-native';
 import AppContext from '../context/appContext';
 import { useNavigation } from '@react-navigation/native';
-import { Marker } from 'react-native-maps'; 
-import MapView from 'react-native-maps'; 
-
+import MapView ,{ Marker } from 'react-native-maps'; 
+import openMap, { createOpenLink } from 'react-native-open-maps';
 
 const Otopark = () => {
 
-    const {latitude,longitude} = useContext(AppContext)
+    const {latitude,longitude,carData} = useContext(AppContext)
 
     const navigation = useNavigation();
+    
+    const directions=(lat,long)=> {
+        createOpenLink({start:{latitude:latitude,longitude:longitude} ,end:{latitude:lat,longitude:long},zoom:0})
+    }
 
     return(
         
@@ -33,12 +36,26 @@ const Otopark = () => {
                     latitudeDelta: 0.0322,
                     longitudeDelta: 0.0121,
                 }}>
-                <Marker 
-                    coordinate={{latitude:Number(latitude), longitude: Number(longitude)}}
-                    title={"Konumum"}
-                    description={"Şuan Bulunduğum Yer"}>
-                </Marker>
-          </MapView>
+                <Marker coordinate={{latitude:latitude,longitude:longitude}} title={"Konumum"} description={"Şuan bulundugum yer"} icon={{uri: 'https://img.icons8.com/plasticine/120/000000/user-location.png'}}/>
+                {carData.Result.map((marker,index) => (
+                    <Marker 
+                    key = {index}
+                    coordinate={marker.Latlng}
+                    title={marker.Ad}
+                    description={marker.AltTuru}
+                    icon={{uri:"https://img.icons8.com/plasticine/120/000000/marker.png"}}
+                    />
+                ))}
+                </MapView>
+                <FlatList  
+                data={carData.Result} 
+                renderItem={ ({item}) =>(
+                    <View style={styles.viewConteiner2}>
+                        <Text style={styles.textFlat}> {item.Ad}{"\n"}{"\n"}{item.Adres} {"\n"}{"\n"} {item.Telefon}</Text>
+                        <Button onPress={createOpenLink({end:`${item.Lat} ${item.Lng}`,zoom:0})} title="Yol Tarifi"/>
+                    </View>
+                )} 
+                keyExtractor={item=> item.Id}/>
             </View>
         </View>
     )
@@ -57,8 +74,19 @@ const styles = StyleSheet.create({
     map: {
         marginTop:'5%',
         width: '100%',
-        height: '65%',
-      },
+        height: '25%',
+    },
+      textFlat:{
+        width:'100%',
+        backgroundColor:'#fff',
+        alignContent:'center',
+        justifyContent:'center',
+        fontSize:15,
+        textAlign:'center'
+    },viewConteiner2:{
+        borderBottomWidth:2,
+        width:'100%',
+    }
 });
 
 export default Otopark

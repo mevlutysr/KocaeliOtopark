@@ -13,6 +13,7 @@ export const AppProvider = ({children}) => {
     const [id,setId] = useState("")
     const [latitude,setLatitude] = useState("")
     const [longitude,setLongitude] = useState("")
+    const [carData,setCarData] = useState("")
     const [isLogin,setIsLogin] = useState(false)
     const [loader,setLoader] = useState(false)
 
@@ -28,6 +29,7 @@ export const AppProvider = ({children}) => {
         loader,setLoader,
         longitude,setLongitude,
         latitude,setLatitude,
+        carData,setCarData
     }
 
     return(
