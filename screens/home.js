@@ -1,9 +1,9 @@
 import React, { useContext,useEffect } from 'react';
-import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar } from 'react-native';
+import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AppContext from '../context/appContext';
 import * as Location from 'expo-location';
-
+import call from 'react-native-phone-call'
 const Home = () => {
 
   const {isLogin,setLoader,setLatitude,setLongitude,longitude,latitude,setCarData} = useContext(AppContext)
@@ -27,7 +27,7 @@ const Home = () => {
     
 
     const getCarData=()=>{
-      
+
       const fet = fetch('', {
         method: 'POST',
         headers: {
@@ -64,16 +64,26 @@ const Home = () => {
     setTimeout(()=>{
       setLoader(false)
       navigation.navigate("Otopark")  
-    },2000)  
+    },1250)  
   }
+  const ara =()=>{
+    const args = {
+        number:`${153}`, 
+        prompt: true,
+        skipCanOpen: true
+    }
+    call(args).catch(console.error)
+}
 
   return (
     <View style={styles.container}>
       <View style={styles.viewConteiner}>
       <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
              style={{width:'65%' , height:'100%' }}/>
-      <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
-             style={{width:'20%' , height:90, marginLeft:'10%'}}/> 
+      <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'10%'}}>
+          <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
+             style={{flex:2}}/>
+      </TouchableOpacity> 
       </View>
       <>
       <Image source={{uri: 'https://www.kocaeli.bel.tr/webfiles/userfiles/images/haberler/2018/2018_ocak/2018_01_24/%C4%B0zmit%20Kent%20Meydan%C4%B1%20h%C4%B1zla%20ilerliyor%201.jpg'}}

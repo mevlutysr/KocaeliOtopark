@@ -1,12 +1,49 @@
-import React,{useContext} from 'react';
-import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput} from 'react-native';
+import React,{useContext,useEffect} from 'react';
+import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput, Alert} from 'react-native';
 import AppContext from '../context/appContext';
 import { useNavigation } from '@react-navigation/native';
+import call from 'react-native-phone-call'
 const Arac = () => {
 
-    const {plaka,setPlaka} = useContext(AppContext)
+    const {plaka,setPlaka,car,setCar,setLoader} = useContext(AppContext)
     const navigation = useNavigation();
+
+    const ara =()=>{
+        const args = {
+            number:`${153}`, 
+            prompt: true,
+            skipCanOpen: true
+        }
+        call(args).catch(console.error)
+    }
+
+    const sorgula = async() => {
+
+        setLoader(true)
+
+        if (plaka.length > 0) {
+            
+            await fetch('', {
+            method: 'POST',
+            headers: {
+              Authorization:'',
+              'Content-Type': ''
+            },
+            body: JSON.stringify({
+                plaka: plaka
+            })
+            }).then((value) => value.json()).then((json)=> setCar(json)).catch((error) => console.error(error))
+
+            setTimeout(()=> {
+                navigation.navigate("Plaka")
+            },1250)
+        }else{
+            setLoader(false)
+            Alert.alert("Lütfen Plaka bilgisini boş bırakmayınız!")
+        }
     
+
+    }
     return(
     <View>
         <View style={styles.viewConteiner}>
@@ -16,7 +53,7 @@ const Arac = () => {
             <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                 style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
             
-            <TouchableOpacity style={{width:'20%' , height:90, marginLeft:'5%'}}>
+            <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'5%'}}>
                 <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
             </TouchableOpacity>
         </View>
@@ -32,7 +69,7 @@ const Arac = () => {
                 maxLength={10}
                 />
             </View>
-        <TouchableOpacity style={styles.sorgulaBtn}>
+        <TouchableOpacity style={styles.sorgulaBtn} onPress={sorgula}>
             <Text style={styles.textBtn}>SORGULA</Text>
          </TouchableOpacity>
     </View>

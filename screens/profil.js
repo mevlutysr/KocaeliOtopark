@@ -5,6 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import AppContext from '../context/appContext';
+import call from 'react-native-phone-call'
 
 const Profil = () => {
 
@@ -43,7 +44,14 @@ const Profil = () => {
         setLoader(false)
     }
 }
-
+const ara =()=>{
+    const args = {
+        number:`${153}`, 
+        prompt: true,
+        skipCanOpen: true
+    }
+    call(args).catch(console.error)
+}
     return(
         <KeyboardAwareScrollView >
             <View style={styles.viewConteiner}>
@@ -53,7 +61,7 @@ const Profil = () => {
                 <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
                     style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
                 
-                <TouchableOpacity style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                <TouchableOpacity  onPress={ara} style={{width:'20%' , height:90, marginLeft:'5%'}}>
                     <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
                 </TouchableOpacity>
             </View>

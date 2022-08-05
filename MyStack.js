@@ -7,6 +7,7 @@ import AracScreen from './screens/arac';
 import ProfilScreen from './screens/profil';
 import UyeScreen from './screens/uye';
 import KayıtlıUyeScreen from './screens/kayıtlıUye';
+import PlakaScreen from './screens/plaka';
 import AppContext from './context/appContext';
 import AppLoader from './loader/AppLoader';
 
@@ -28,6 +29,7 @@ const MyStack = () => {
         <Stack.Screen name="Profil" component={ProfilScreen}/>
         <Stack.Screen name="Uye" component={UyeScreen}/>
         <Stack.Screen name="KayıtlıUye" component={KayıtlıUyeScreen}/>
+        <Stack.Screen name="Plaka" component={PlakaScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
     {loader ? <AppLoader/> : null}
