@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import call from 'react-native-phone-call'
 const Arac = () => {
 
-    const {plaka,setPlaka,car,setCar,setLoader} = useContext(AppContext)
+    const {plaka,setPlaka,car,setCar,setLoader,setLoader1} = useContext(AppContext)
     const navigation = useNavigation();
 
     const ara =()=>{
@@ -20,14 +20,13 @@ const Arac = () => {
     const sorgula = async() => {
 
         setLoader(true)
-
         if (plaka.length > 0) {
-            
+            setLoader1(true)
             await fetch('', {
             method: 'POST',
             headers: {
               Authorization:'',
-              'Content-Type': ''
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 plaka: plaka

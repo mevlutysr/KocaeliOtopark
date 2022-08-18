@@ -3,8 +3,8 @@ import { View ,StyleSheet,TouchableOpacity,Image, Alert,Text} from "react-native
 import { useNavigation } from '@react-navigation/native';
 import AppContext from "../context/appContext";
 import { createOpenLink } from 'react-native-open-maps';
-import { SliderBox } from "react-native-image-slider-box";
-import call from 'react-native-phone-call'
+import call from 'react-native-phone-call';
+import Imag from "../imag";
 
 const  Plaka = () => {
     const {car,setLoader,setLoader1,loader1} = useContext(AppContext)
@@ -27,12 +27,17 @@ const  Plaka = () => {
     },[])
 
     const otoparkAra =()=>{
-        const args = {
-            number:`${car.Result.Telefon}`, 
-            prompt: true,
-            skipCanOpen: true
+        if(car.Result.Telefon.lenght > 0){
+            const args = {
+                number:`${car.Result.Telefon}`, 
+                prompt: true,
+                skipCanOpen: true
+            }
+            call(args).catch(console.error)
         }
-        call(args).catch(console.error)
+        else{
+            Alert.alert("Telefon numarası bulunamadı.")
+        }
     }
     const ara =()=>{
         const args = {
@@ -69,11 +74,7 @@ const  Plaka = () => {
                     <Image style={{flex:2}}source={require('../assets/mavi.png') } />
                 </TouchableOpacity>
                 <View style={styles.slider}>
-                    <SliderBox
-                    style={{marginTop:7,height:250}} 
-                    images={loader1?<></>:car.Result.Resimler}
-
-                    />
+                    {loader1 ? <></> : <Imag></Imag>}
                 </View>
             </View>
         </View>

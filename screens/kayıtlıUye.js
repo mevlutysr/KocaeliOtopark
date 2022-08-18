@@ -7,6 +7,7 @@ import { collection, doc,query,where, onSnapshot,updateDoc} from "firebase/fires
 import AppContext from '../context/appContext';
 import { signOut, updatePassword, updateEmail} from 'firebase/auth';
 import call from 'react-native-phone-call'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const KayıtlıUye = () => {
 
@@ -18,7 +19,7 @@ const KayıtlıUye = () => {
         email,setEmail,
         password,setPassword,
         id,setId,
-        setIsLogin,setLoader,
+        setLoader,setIsLogin
     } = useContext(AppContext)
     
     
@@ -26,8 +27,30 @@ const KayıtlıUye = () => {
     const navigation = useNavigation();
     
     useEffect(() => {
+        const getData = async () => {
+            const docRef =  collection(db, "users");
+            const q = query(docRef,where("email", "==", {email}));
+        
+            onSnapshot(q,(doc)=>{ 
+                doc.docs.forEach((doc)=> {
+                    val.push({ ...doc.data()});
+                })
+                doc.docs.map((doc)=> {
+                    setId(doc.id)
+                })  
+                val.map(todo =>{
+                  setAdSoyad(todo.adSoyad.adSoyad)
+                  setTelefon(todo.telefon.telefon)
+                  setPlaka(todo.plaka.plaka)
+                  setEmail(todo.email.email)
+                  setPassword(todo.password.password)
+                })
+            })
+        }
+
         getData();
     }, []);
+
     const processAuthError = (authError) => {
         if(authError.includes('network-request-failed')) {
             Alert.alert('İnternet bağlantınızı kontrol ediniz.')
@@ -36,26 +59,7 @@ const KayıtlıUye = () => {
         }
       }
 
-    const getData = () => {
-        const docRef =  collection(db, "users");
-        const q = query(docRef,where("email", "==", {email}));
     
-        onSnapshot(q,(doc)=>{ 
-            doc.docs.forEach((doc)=> {
-                val.push({ ...doc.data()});
-            })
-            doc.docs.map((doc)=> {
-                setId(doc.id)
-            })  
-            val.map(todo =>{
-              setAdSoyad(todo.adSoyad.adSoyad)
-              setTelefon(todo.telefon.telefon)
-              setPlaka(todo.plaka.plaka)
-              setEmail(todo.email.email)
-              setPassword(todo.password.password)
-            })
-        })
-    }
 
     const setData = async () =>{
         
@@ -90,10 +94,11 @@ const KayıtlıUye = () => {
         } 
     }
 
-    const removeData =  () => {
+    const removeData = async () => {
 
         try {
-            setIsLogin(false);
+            await AsyncStorage.setItem('isLogin', "false")
+            setIsLogin("");
             setAdSoyad("");
             setPlaka("");
             setTelefon("");
@@ -117,7 +122,7 @@ const KayıtlıUye = () => {
 
     return(
 
-        <KeyboardAwareScrollView >
+        <KeyboardAwareScrollView style={styles.container}>
            
            <View style={styles.viewConteiner}>
                 <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>

@@ -7,6 +7,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, setDoc,doc } from "firebase/firestore";
 import AppContext from '../context/appContext';
 import call from 'react-native-phone-call'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Uye = () => {
 
@@ -16,7 +17,7 @@ const Uye = () => {
         plaka,setPlaka,
         email,setEmail,
         password,setPassword,
-        setIsLogin,setLoader,
+        setLoader,setIsLogin,
     } = useContext(AppContext);
 
     const navigation = useNavigation();
@@ -54,7 +55,9 @@ const Uye = () => {
                     email:{email},
                     password:{password}
                 });
-                setIsLogin(true);
+                await AsyncStorage.setItem('isLogin', "true")
+                await AsyncStorage.setItem('email', email)
+                setIsLogin("true");
                 setLoader(false);
                 Alert.alert("İşlem Başarılı!!");
                 navigation.navigate('KayıtlıUye');
@@ -77,7 +80,7 @@ const Uye = () => {
 
     return(
 
-        <KeyboardAwareScrollView >       
+        <KeyboardAwareScrollView  style={styles.container}>       
             <View style={styles.viewConteiner}>
                 <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Profil')}>
                     <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>

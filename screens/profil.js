@@ -6,13 +6,14 @@ import { auth } from '../config/firebase';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import AppContext from '../context/appContext';
 import call from 'react-native-phone-call'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profil = () => {
 
     const {
         email,setEmail,
         password,setPassword,
-        setIsLogin,setLoader,
+        setLoader,setIsLogin
     } = useContext(AppContext)
     const navigation = useNavigation();
 
@@ -35,9 +36,13 @@ const Profil = () => {
     try {
         setLoader(true);
         await signInWithEmailAndPassword(auth, email, password)
-        setIsLogin(true)
+        await AsyncStorage.setItem('isLogin', "true")
+        await AsyncStorage.setItem('email', email)
+        setIsLogin("true")
         setLoader(false)
+        setTimeout(()=> {
         navigation.navigate('KayıtlıUye')
+        },350)
     }catch (error) {
         const errorCode = error.code
         processAuthError(errorCode)
@@ -53,7 +58,7 @@ const ara =()=>{
     call(args).catch(console.error)
 }
     return(
-        <KeyboardAwareScrollView >
+        <KeyboardAwareScrollView style={styles.container} >
             <View style={styles.viewConteiner}>
                 <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
                     <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>

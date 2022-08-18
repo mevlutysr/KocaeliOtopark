@@ -1,18 +1,13 @@
 {
   "expo": {
-<<<<<<< HEAD
-    "name": "KoaceliOtopark",
-    "slug": "KoaceliOtopark",
-=======
-    "name": "hatabul",
+    "name": "Kocaeli Otopark",
     "slug": "hatabul",
->>>>>>> f1cf74f (Created a new Expo app)
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/ekran.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -29,7 +24,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBRJ8eIxz3cl30zXz_3r3yFg55efC1VEgs"
+        }
+      },
+      "package": "com.mevlutysr.hatabul"
     },
     "web": {
       "favicon": "./assets/favicon.png"

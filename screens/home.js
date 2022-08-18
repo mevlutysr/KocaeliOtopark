@@ -1,16 +1,19 @@
-import React, { useContext,useEffect } from 'react';
-import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar, TouchableOpacity } from 'react-native';
+import React, { useContext,useEffect,useState } from 'react';
+import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar, TouchableOpacity,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AppContext from '../context/appContext';
 import * as Location from 'expo-location';
-import call from 'react-native-phone-call'
+import call from 'react-native-phone-call';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Home = () => {
 
-  const {isLogin,setLoader,setLatitude,setLongitude,longitude,latitude,setCarData} = useContext(AppContext)
+  const {setLoader,setLatitude,setLongitude,longitude,latitude,setCarData,setEmail,isLogin,setIsLogin,carData} = useContext(AppContext)
   const navigation = useNavigation();
 
   useEffect(()=> {
     const getLocation = async()=>{
+      setLoader(true)
       let { status } =  await Location.requestForegroundPermissionsAsync();
 
       if (status !== 'granted') {
@@ -23,49 +26,57 @@ const Home = () => {
         await setLatitude(coords.latitude);
         await setLongitude(coords.longitude);
       }
-    }
-    
-
-    const getCarData=()=>{
-
-      const fet = fetch('', {
-        method: 'POST',
-        headers: {
-          Authorization:'',
-          'Content-Type': ''
-        },
-        body: JSON.stringify({
-          
-          latitude: latitude,
-          longitude: longitude
-        })
-        });
-    
-        fet.then((value) => value.json()).then((json)=> setCarData(json)).catch((error) => console.error(error))
-      }
+      const value = await AsyncStorage.getItem('isLogin')
+      setIsLogin(value)
+      
+      setLoader(false)
+      
+  }
 
     getLocation();
-
-    getCarData();
-   
     
   },[])
 
-  const control = () => {
-    if (isLogin == true){
-    navigation.navigate('KayıtlıUye');
-    }else{
-      navigation.navigate('Profil');
-    }
+  const control = async () => {
+    setTimeout(async ()=> {
+      if(isLogin == "true") {
+        const value = await AsyncStorage.getItem('email')
+          if(value !== null) {
+            setEmail(value)
+            navigation.navigate('KayıtlıUye');
+          }else{
+            navigation.navigate('Profil');
+          }
+      }else{
+        navigation.navigate('Profil');
+      }
+    },500)
+    
   }
   
   const getMaps = () => {
     setLoader(true)
-    setTimeout(()=>{
+    console.log("getcar",latitude,longitude)
+    const fet = fetch('', {
+      method: 'POST',
+      headers: {
+        Authorization:'',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        
+        latitude: latitude,
+        longitude: longitude
+      })
+      });
+    fet.then((value) => value.json()).then((json)=> setCarData(json)).catch((error) => console.error(error))
+    setTimeout(()=> {
       setLoader(false)
-      navigation.navigate("Otopark")  
-    },1250)  
+      navigation.navigate("Otopark")
+    },1250)
+    
   }
+
   const ara =()=>{
     const args = {
         number:`${153}`, 

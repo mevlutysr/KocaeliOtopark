@@ -1,17 +1,25 @@
-import React,{useContext} from 'react';
-import {View,Text,StyleSheet,Image, TouchableOpacity,FlatList} from 'react-native';
+import React,{useContext, useEffect, useState} from 'react';
+import {View,Text,StyleSheet,Image, TouchableOpacity,FlatList, Alert} from 'react-native';
 import AppContext from '../context/appContext';
 import { useNavigation } from '@react-navigation/native';
-import MapView ,{ Marker } from 'react-native-maps'; 
+import MapView,{ Marker,PROVIDER_GOOGLE } from 'react-native-maps'; 
 import { createOpenLink } from 'react-native-open-maps';
 import call from 'react-native-phone-call'
 
 const Otopark = () => {
 
     const {latitude,longitude,carData} = useContext(AppContext)
+    const [load,setLoad] = useState(true);
 
     const navigation = useNavigation();
-
+    useEffect(()=>{
+        if(carData.Result == undefined){
+            Alert.alert("Lütfen tekrar deneyiniz.")
+            navigation.navigate("Home")
+        }else{
+            setLoad(false)
+        }
+    },[])
     const ara =()=>{
         const args = {
             number:`${153}`, 
@@ -36,13 +44,14 @@ const Otopark = () => {
             </View>
             <View>
                 <MapView style={styles.map} initialRegion={{
+                    provider:{PROVIDER_GOOGLE},
                     latitude: Number(latitude),
                     longitude: Number(longitude),
                     latitudeDelta: 0.0322,
                     longitudeDelta: 0.0121,
                 }}>
-                <Marker coordinate={{latitude:latitude,longitude:longitude}} title={"Konumum"} description={"Şuan bulundugum yer"} icon={{uri: 'https://img.icons8.com/plasticine/120/000000/user-location.png'}}/>
-                {carData.Result.map((marker,index) => (
+                <Marker coordinate={{latitude:Number(latitude),longitude: Number(longitude)}} title={"Konumum"} description={"Şuan bulundugum yer"} icon={{uri: 'https://img.icons8.com/plasticine/120/000000/user-location.png'}}/>
+                {load ? <></> : carData.Result.map((marker,index) => (
                     <Marker 
                     key = {index}
                     coordinate={marker.Latlng}
@@ -52,7 +61,7 @@ const Otopark = () => {
                     />
                 ))}
                 </MapView>
-                <FlatList  
+                {load ? <></> : <FlatList  
                 data={carData.Result} 
                 renderItem={ ({item}) =>(
                     <View style={styles.viewConteiner2}>
@@ -62,7 +71,7 @@ const Otopark = () => {
                         </TouchableOpacity>
                     </View>
                 )} 
-                keyExtractor={item=> item.Id}/>
+                keyExtractor={item=> item.Id}/>}
             </View>
         </View>
     )

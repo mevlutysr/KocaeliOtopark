@@ -15,9 +15,9 @@ export const AppProvider = ({children}) => {
     const [longitude,setLongitude] = useState("")
     const [carData,setCarData] = useState("")
     const [car,setCar] = useState("")
-    const [isLogin,setIsLogin] = useState(false)
     const [loader,setLoader] = useState(false)
     const [loader1,setLoader1] = useState(true)
+    const [isLogin,setIsLogin] = useState("")
 
 
     const data = {
@@ -27,13 +27,13 @@ export const AppProvider = ({children}) => {
         email,setEmail,
         password,setPassword,
         id,setId,
-        isLogin,setIsLogin,
         loader,setLoader,
         longitude,setLongitude,
         latitude,setLatitude,
         carData,setCarData,
         car,setCar,
-        loader1,setLoader1
+        loader1,setLoader1,
+        isLogin,setIsLogin
     }
 
     return(
