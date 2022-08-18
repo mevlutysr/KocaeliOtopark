@@ -1,10 +1,10 @@
-merhaba, 
+Merhaba, 
 Türkiye'de Kocaeli'deki otoparkların yerini ve çekilen aracınızın hangi otoparkta tutulduğunu öğrenebileceğiniz bir uygulamadır.
 
 
 
 
-hello, 
+Hello, 
 İt is an application where you can learn the location of the parking lots in Kocaeli in Turkey and in which parking lot your towed vehicle is kept.
 
 ![homePage](https://user-images.githubusercontent.com/87472957/185390467-509c0749-7d68-4954-b2a7-16d50016cd4a.jpeg)
