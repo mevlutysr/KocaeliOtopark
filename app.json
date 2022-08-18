@@ -1,7 +1,12 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "KoaceliOtopark",
     "slug": "KoaceliOtopark",
+=======
+    "name": "hatabul",
+    "slug": "hatabul",
+>>>>>>> f1cf74f (Created a new Expo app)
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
