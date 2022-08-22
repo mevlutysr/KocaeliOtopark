@@ -7,11 +7,11 @@ Türkiye'de Kocaeli'deki otoparkların yerini ve çekilen aracınızın hangi ot
 Hello, 
 İt is an application where you can learn the location of the parking lots in Kocaeli in Turkey and in which parking lot your towed vehicle is kept.
 
-![homePage](https://user-images.githubusercontent.com/87472957/185390467-509c0749-7d68-4954-b2a7-16d50016cd4a.jpeg)
-![otoparkPage](https://user-images.githubusercontent.com/87472957/185390685-aa82542b-b5d3-4f43-8379-d276dd28d339.jpeg)
-![girişPage](https://user-images.githubusercontent.com/87472957/185390463-0a63a179-5c82-49de-978b-6b2152d61b0d.jpeg)
-![profilPage](https://user-images.githubusercontent.com/87472957/185390469-816169d2-f257-46b4-bf3e-81812b568627.jpeg)
-![üyePage](https://user-images.githubusercontent.com/87472957/185390473-53a80243-35d0-460f-9d5f-d85358d5de9c.jpeg)
-![sorguPage](https://user-images.githubusercontent.com/87472957/185390471-93158c44-92a1-4dcf-802f-bdb36430191b.jpeg)
 
-![girişPage](https://user-images.githubusercontent.com/87472957/185850674-ef30d4f2-58db-4949-9ef2-594e3c4bb51f.jpeg)
+![homePage](https://user-images.githubusercontent.com/87472957/185850998-4f2832c4-b9e4-4179-abd8-fd90d5b511a2.jpeg)
+![otoparkPage](https://user-images.githubusercontent.com/87472957/185851002-7c10a30b-b92f-4c13-a4e9-369032a37732.jpeg)
+![girişPage](https://user-images.githubusercontent.com/87472957/185850991-9b926f75-2edc-4ac8-970d-aec936c274cf.jpeg)
+![üyePage](https://user-images.githubusercontent.com/87472957/185851005-32d630f3-e284-4450-896c-43c95738afa6.jpeg)
+![profilPage](https://user-images.githubusercontent.com/87472957/185851003-3bd07032-8a88-4e3c-ac7a-5daffc1fe0ee.jpeg)
+![sorguPage](https://user-images.githubusercontent.com/87472957/185851004-58d4b2c0-e6bf-4234-b267-96cac9ba2f6e.jpeg)
+
