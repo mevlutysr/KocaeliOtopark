@@ -1,23 +1,21 @@
-import React,{useContext}from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import AppLoader from './loader/AppLoader';
 import HomeScreen from './screens/home';
 import OtoparkScreen from './screens/otopark';
 import AracScreen from './screens/arac';
 import ProfilScreen from './screens/profil';
 import UyeScreen from './screens/uye';
-import KayıtlıUyeScreen from './screens/kayıtlıUye';
+import KayıtlıUyeScreen from './screens/kayitliUye';
 import PlakaScreen from './screens/plaka';
-import AppContext from './context/appContext';
-import AppLoader from './loader/AppLoader';
-
-
 
 const Stack = createNativeStackNavigator();
 
 const MyStack = () => {
-
-    const {loader} = useContext(AppContext)
+  
+  const load = useSelector((state) => state.Slice.Loader)
 
   return (
     <>
@@ -32,7 +30,7 @@ const MyStack = () => {
         <Stack.Screen name="Plaka" component={PlakaScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
-    {loader ? <AppLoader/> : null}
+    {load ? <AppLoader/> : null}
     </>
   );
 };

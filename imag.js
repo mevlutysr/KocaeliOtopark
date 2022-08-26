@@ -1,12 +1,11 @@
-import React , {useState,useContext} from "react";
+import React , {useState} from "react";
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text,View } from "react-native";
-import AppContext from "./context/appContext";
-
+import { useSelector } from 'react-redux';
 
 const Imag =()=> {
     
-    const [imgActive,setImgActive] =useState(0);
-    const {car} = useContext(AppContext);
+    const [imgActive, setImgActive] = useState(0);
+    const carData = useSelector((state) => state.Slice.CarData)
 
     return(
         <SafeAreaView style={styles.conteiner}>
@@ -26,7 +25,7 @@ const Imag =()=> {
                 style={styles.wrap}
                 >
                     {
-                        car.Result.Resimler.map((e,index)=>
+                        carData.Result.Resimler.map((e,index)=>
                         <Image 
                             key={e}
                             style={styles.wrap}
@@ -38,7 +37,7 @@ const Imag =()=> {
                 </ScrollView>
                 <View style={styles.wrapDot}>
                     {
-                        car.Result.Resimler.map((e,index) =>
+                        carData.Result.Resimler.map((e,index) =>
                         <Text 
                         key={e}
                         style={imgActive == index ? styles.dotActive : styles.dot}
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
     },
     wrap:{
         width: Dimensions.get('window').width,
-        height: (Dimensions.get('window').height) * 0.25,
+        height: (Dimensions.get('window').height) * 0.31,
     },
     wrapDot:{
         position:'absolute',

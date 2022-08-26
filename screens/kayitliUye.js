@@ -1,28 +1,24 @@
-import React,{ useEffect, useContext } from 'react';
-import { View,Text,StyleSheet,Image,TextInput,TouchableOpacity,Alert} from 'react-native';
+import React,{ useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { auth, db } from '../config/firebase';
 import { collection, doc,query,where, onSnapshot,updateDoc} from "firebase/firestore";
-import AppContext from '../context/appContext';
 import { signOut, updatePassword, updateEmail} from 'firebase/auth';
 import call from 'react-native-phone-call'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoader, setAdSoyad, setPlaka, setPassword, setTelefon, setEmail, setId } from "../stores/slice";
 
-const KayıtlıUye = () => {
-
+const KayitliUye = () => {
     
-    const { 
-        adSoyad,setAdSoyad,
-        telefon,setTelefon,
-        plaka,setPlaka,
-        email,setEmail,
-        password,setPassword,
-        id,setId,
-        setLoader,setIsLogin
-    } = useContext(AppContext)
-    
-    
+    const adSoyad = useSelector((state) => state.Slice.AdSoyad)
+    const telefon = useSelector((state) => state.Slice.Telefon)
+    const email = useSelector((state) => state.Slice.Email)
+    const password = useSelector((state) => state.Slice.Password)
+    const plaka = useSelector((state) => state.Slice.Plaka)
+    const id = useSelector((state) => state.Slice.Id)
+    const dispatch = useDispatch()
     const val = [];
     const navigation = useNavigation();
     
@@ -36,14 +32,14 @@ const KayıtlıUye = () => {
                     val.push({ ...doc.data()});
                 })
                 doc.docs.map((doc)=> {
-                    setId(doc.id)
-                })  
+                    dispatch(setId(doc.id))
+                })
                 val.map(todo =>{
-                  setAdSoyad(todo.adSoyad.adSoyad)
-                  setTelefon(todo.telefon.telefon)
-                  setPlaka(todo.plaka.plaka)
-                  setEmail(todo.email.email)
-                  setPassword(todo.password.password)
+                  dispatch(setAdSoyad(todo.adSoyad.adSoyad))
+                  dispatch(setTelefon(todo.telefon.telefon))
+                  dispatch(setPlaka(todo.plaka.plaka))
+                  dispatch(setEmail(todo.email.email))
+                  dispatch(setPassword(todo.password.password))
                 })
             })
         }
@@ -63,9 +59,9 @@ const KayıtlıUye = () => {
 
     const setData = async () =>{
         
-        setLoader(true)
+        dispatch(setLoader(true))
         if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
-            setLoader(false)
+            dispatch(setLoader(false))
             Alert.alert('Lütfen boş alan bırakmayınız!!');
         }
         else{
@@ -82,13 +78,12 @@ const KayıtlıUye = () => {
                     email:{email},
                     password:{password}
                 });
-                setLoader(false);
-                Alert.alert("Bilgiler Başarıyla Güncellendi!!");
-                getData(); 
+                dispatch(setLoader(false));
+                Alert.alert("Bilgiler Başarıyla Güncellendi!!");  
             } catch (error) {
                 const errorCode = error.code
                 processAuthError(errorCode)
-                setLoader(false)
+                dispatch(setLoader(false))
                 console.log(errorCode)
             }            
         } 
@@ -98,13 +93,12 @@ const KayıtlıUye = () => {
 
         try {
             await AsyncStorage.setItem('isLogin', "false")
-            setIsLogin("");
-            setAdSoyad("");
-            setPlaka("");
-            setTelefon("");
-            setEmail("");
-            setPassword("");
-            setId("");
+            dispatch(setAdSoyad(""));
+            dispatch(setPlaka(""));
+            dispatch(setTelefon(""));
+            dispatch(setEmail(""));
+            dispatch(setPassword(""));
+            dispatch(setId(""));
             signOut(auth);
             navigation.navigate('Profil');     
         } catch (error) {
@@ -128,10 +122,10 @@ const KayıtlıUye = () => {
                 <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
                     <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
                 </TouchableOpacity>
-                <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
+                <Image source={require('../assets/kocaeli.png')}
                     style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
                 
-                <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                <TouchableOpacity onPress={ara} style={{width: Platform.OS === 'ios' ? '21%' : '20%' , height:90, marginLeft:'5%'}}>
                     <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
                 </TouchableOpacity>
             </View>
@@ -145,7 +139,7 @@ const KayıtlıUye = () => {
                 placeholder='AdSoyad'
                 value={adSoyad}
                 placeholderTextColor="#fff"
-                onChangeText={(adSoyad) => setAdSoyad(adSoyad)}
+                onChangeText={(adSoyad) => dispatch(setAdSoyad(adSoyad))}
                 />
             </View>
             <Text style={styles.textBaslik}>TELEFON</Text>
@@ -156,7 +150,7 @@ const KayıtlıUye = () => {
                 placeholderTextColor="#fff"
                 keyboardType='numeric'
                 maxLength={11}
-                onChangeText={(telefon) => setTelefon(telefon)}
+                onChangeText={(telefon) => dispatch(setTelefon(telefon))}
                 />
             </View>
             <Text style={styles.textBaslik}>PLAKA</Text>
@@ -166,7 +160,7 @@ const KayıtlıUye = () => {
                 value={plaka} 
                 placeholderTextColor="#fff"
                 maxLength={10}
-                onChangeText={(plaka) => setPlaka(plaka)}
+                onChangeText={(plaka) => dispatch(setPlaka(plaka))}
                 />
             </View>
             <Text style={styles.textBaslik}>E-MAİL</Text>
@@ -175,19 +169,19 @@ const KayıtlıUye = () => {
                 placeholder='Email'
                 value={email}
                 placeholderTextColor="#fff"
-                onChangeText={(email) => setEmail(email)}
+                onChangeText={(email) => dispatch(setEmail(email))}
                 />
             </View>
             <Text style={styles.textBaslik}>ŞİFRE</Text>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
-                placeholder='Sifre'
+                placeholder='Password'
                 value={password}
                 placeholderTextColor="#fff"
-                onChangeText={(password) => setPassword(password)}
+                onChangeText={(password) => dispatch(setPassword(password))}
                 />
             </View>        
-            <TouchableOpacity style={styles.kayıtBtn} onPress={setData}>
+            <TouchableOpacity style={styles.kayitBtn} onPress={setData}>
                 <Text style={styles.textBtn}>GÜNCELLE</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.removeBtn} onPress={removeData}>
@@ -204,8 +198,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },  
         viewConteiner: {
-        marginTop:'2%',
-        marginLeft:'5%',
+        marginTop: Platform.OS === 'ios' ? '7%' : '2%',
+        marginLeft:'2%',
         flexDirection:'row',
     },
     inputView: {
@@ -235,7 +229,7 @@ const styles = StyleSheet.create({
     textInput:{
         width:'100%',
         color:'#fff',
-        marginTop:'2%',
+        marginTop: Platform.OS === 'ios' ? '4%' : '2%',
         textAlign:'center',
         fontSize:14,
     },
@@ -244,7 +238,7 @@ const styles = StyleSheet.create({
         color:'#fff',
         fontSize:15,
     },
-    kayıtBtn: {
+    kayitBtn: {
         width: "80%",
         borderRadius: 25,
         height: 50,
@@ -266,4 +260,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default KayıtlıUye
+export default KayitliUye

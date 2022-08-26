@@ -1,24 +1,23 @@
 import React,{useContext} from 'react';
-import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity, Alert} from 'react-native';
+import {View,Text,StyleSheet,Image,TextInput,TouchableOpacity, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { db,auth } from '../config/firebase';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, setDoc,doc } from "firebase/firestore";
-import AppContext from '../context/appContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoader, setAdSoyad, setPlaka, setPassword, setTelefon, setEmail, setId } from "../stores/slice";
 import call from 'react-native-phone-call'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Uye = () => {
 
-    const {
-        adSoyad,setAdSoyad,
-        telefon,setTelefon,
-        plaka,setPlaka,
-        email,setEmail,
-        password,setPassword,
-        setLoader,setIsLogin,
-    } = useContext(AppContext);
+    const adSoyad = useSelector((state) => state.Slice.AdSoyad)
+    const telefon = useSelector((state) => state.Slice.Telefon)
+    const email = useSelector((state) => state.Slice.Email)
+    const password = useSelector((state) => state.Slice.Password)
+    const plaka = useSelector((state) => state.Slice.Plaka)
+    const dispatch = useDispatch()
 
     const navigation = useNavigation();
 
@@ -37,9 +36,9 @@ const Uye = () => {
       }
 
     const setData = async () =>{
-        setLoader(true)
+        dispatch(setLoader(true))
         if (adSoyad.length == 0 || email.length == 0 || telefon.length == 0 || plaka.length == 0 || password.length == 0){
-            setLoader(false)
+            dispatch(setLoader(false))
             Alert.alert('Lütfen boş alan bırakmayınız!!');
         }else{
             
@@ -57,14 +56,13 @@ const Uye = () => {
                 });
                 await AsyncStorage.setItem('isLogin', "true")
                 await AsyncStorage.setItem('email', email)
-                setIsLogin("true");
-                setLoader(false);
+                dispatch(setLoader(false));
                 Alert.alert("İşlem Başarılı!!");
                 navigation.navigate('KayıtlıUye');
             } catch (error) {
                 const errorCode = error.code
                 processAuthError(errorCode)
-                setLoader(false)
+                dispatch(setLoader(false))
             }
         }
         
@@ -85,10 +83,10 @@ const Uye = () => {
                 <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Profil')}>
                     <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
                 </TouchableOpacity>
-                <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
+                <Image source={require('../assets/kocaeli.png')}
                     style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
                 
-                <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'5%'}}>
+                <TouchableOpacity onPress={ara} style={{width: Platform.OS === 'ios' ? '21%' : '20%' , height:90, marginLeft:'5%'}}>
                     <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
                 </TouchableOpacity>
             </View>
@@ -99,7 +97,7 @@ const Uye = () => {
                 <TextInput style={styles.textInput} 
                 placeholder="Ad Soyad" 
                 placeholderTextColor="#fff"
-                onChangeText={(adSoyad) => setAdSoyad(adSoyad)}
+                onChangeText={(adSoyad) => dispatch(setAdSoyad(adSoyad))}
                 />
             </View>
             <View style={styles.inputView}>
@@ -108,7 +106,7 @@ const Uye = () => {
                 placeholderTextColor="#fff"
                 keyboardType='numeric'
                 maxLength={11}
-                onChangeText={(telefon) => setTelefon(telefon)}
+                onChangeText={(telefon) => dispatch(setTelefon(telefon))}
                 />
             </View>
             <View style={styles.inputView}>
@@ -116,14 +114,14 @@ const Uye = () => {
                 placeholder="Plaka" 
                 placeholderTextColor="#fff"
                 maxLength={10}
-                onChangeText={(plaka) => setPlaka(plaka)}
+                onChangeText={(plaka) => dispatch(setPlaka(plaka))}
                 />
             </View>
             <View style={styles.inputView}>
                 <TextInput style={styles.textInput} 
                 placeholder="E-mail" 
                 placeholderTextColor="#fff"
-                onChangeText={(email) => setEmail(email)}
+                onChangeText={(email) => dispatch(setEmail(email))}
                 />
             </View>
             <View style={styles.inputView}>
@@ -131,10 +129,10 @@ const Uye = () => {
                 placeholder="Sifre"
                 placeholderTextColor="#fff"
                 secureTextEntry={true}
-                onChangeText={(password) => setPassword(password)}
+                onChangeText={(password) => dispatch(setPassword(password))}
                 />
             </View>        
-            <TouchableOpacity style={styles.kayıtBtn} onPress={setData}>
+            <TouchableOpacity style={styles.kayitBtn} onPress={setData}>
                 <Text style={styles.textBtn}>KAYIT OL</Text>
             </TouchableOpacity>
         </KeyboardAwareScrollView>
@@ -147,8 +145,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },  
         viewConteiner: {
-        marginTop:'2%',
-        marginLeft:'5%',
+        marginTop: Platform.OS === 'ios' ? '7%' : '2%',
+        marginLeft:'2%',
         flexDirection:'row',
     },
     inputView: {
@@ -171,7 +169,7 @@ const styles = StyleSheet.create({
     textInput:{
         width:'100%',
         color:'#fff',
-        marginTop:'2%',
+        marginTop: Platform.OS === 'ios' ? '4%' : '2%',
         textAlign:'center',
         fontSize:14,
     },
@@ -180,7 +178,7 @@ const styles = StyleSheet.create({
         color:'#fff',
         fontSize:15,
     },
-    kayıtBtn: {
+    kayitBtn: {
         width: "80%",
         borderRadius: 25,
         height: 50,

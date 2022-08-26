@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { AppProvider } from './context/appContext';
 import MyStack from './MyStack';
-
+import { store } from './store';
+import { Provider } from 'react-redux';
 
 const App = () => {
   return (
-    <AppProvider>
+    <Provider store={store}>
       <MyStack />
-    </AppProvider>
+    </Provider>
+    
   );
 };
 

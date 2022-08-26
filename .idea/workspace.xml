@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4f5a38a4-c048-4e90-ac0c-7dc2ef67c5af" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/config/firebase.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/firebase.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/imag.js" beforeDir="false" afterPath="$PROJECT_DIR$/imag.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/arac.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/arac.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/kayitliUye.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/kayitliUye.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/otopark.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/otopark.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/plaka.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/plaka.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/profil.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/profil.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/uye.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/uye.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2DqkxUFj2l5mQY2YrobTuFhZ8MP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4f5a38a4-c048-4e90-ac0c-7dc2ef67c5af" name="Default Changelist" comment="" />
+      <created>1661434255236</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1661434255236</updated>
+    </task>
+    <servers />
+  </component>
+</project>

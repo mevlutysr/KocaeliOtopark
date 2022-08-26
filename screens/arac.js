@@ -1,11 +1,14 @@
-import React,{useContext,useEffect} from 'react';
-import {View,Text,StyleSheet,Image,TouchableOpacity,TextInput, Alert} from 'react-native';
-import AppContext from '../context/appContext';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert, Platform } from "react-native";
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoader, setPlaka, setCarData } from "../stores/slice";
 import { useNavigation } from '@react-navigation/native';
-import call from 'react-native-phone-call'
-const Arac = () => {
 
-    const {plaka,setPlaka,car,setCar,setLoader,setLoader1} = useContext(AppContext)
+const Arac =()=> {
+
+    const plaka = useSelector((state) => state.Slice.Plaka)
+    const carData = useSelector((state) => state.Slice.CarData)
+    const dispatch = useDispatch()
     const navigation = useNavigation();
 
     const ara =()=>{
@@ -19,40 +22,41 @@ const Arac = () => {
 
     const sorgula = async() => {
 
-        setLoader(true)
+        dispatch(setLoader(true))
         if (plaka.length > 0) {
-            setLoader1(true)
+
             await fetch('', {
             method: 'POST',
             headers: {
               Authorization:'',
-              'Content-Type': 'application/json'
+              'Content-Type': ''
             },
             body: JSON.stringify({
                 plaka: plaka
             })
-            }).then((value) => value.json()).then((json)=> setCar(json)).catch((error) => console.error(error))
+            }).then((value) => value.json()).then((json)=> dispatch(setCarData(json))).catch((error) => console.error(error))
 
             setTimeout(()=> {
                 navigation.navigate("Plaka")
             },1250)
+
         }else{
-            setLoader(false)
+            dispatch(setLoader(false))
             Alert.alert("Lütfen Plaka bilgisini boş bırakmayınız!")
         }
     
 
     }
     return(
-    <View>
+        <View style={styles.container}>
         <View style={styles.viewConteiner}>
             <TouchableOpacity style={{width:'8%' , height:'100%',marginTop:'2%'}}  onPress={() => navigation.navigate('Home')}>
                 <Image style={{flex:2}} source={{uri: 'https://cdn0.iconfinder.com/data/icons/web-seo-and-advertising-media-1/512/218_Arrow_Arrows_Back-512.png'}}/>
             </TouchableOpacity>
-            <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
+            <Image source={require('../assets/kocaeli.png')}
                 style={{width:'62%' , height:'100%',marginLeft:'2%'}}/>
             
-            <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'5%'}}>
+            <TouchableOpacity onPress={ara} style={{width: Platform.OS ==='ios'? '21%':'20%' , height:90, marginLeft:'5%'}}>
                 <Image style={{flex:2}} source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}/> 
             </TouchableOpacity>
         </View>
@@ -64,7 +68,7 @@ const Arac = () => {
                 placeholder="PLAKANIZI GİRİNİZ"
                 value={plaka}
                 placeholderTextColor="#fff"
-                onChangeText={(plaka) => setPlaka(plaka)}
+                onChangeText={(plaka) => dispatch(setPlaka(plaka))}
                 maxLength={10}
                 />
             </View>
@@ -81,8 +85,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     viewConteiner: {
-        marginTop:'2%',
-        marginLeft:'5%',
+        marginTop: Platform.OS === 'ios' ? '7%' : '2%',
+        marginLeft:'2%',
         flexDirection:'row',
     },
     inputView: {
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
     textInput:{
         width:'100%',
         color:'#fff',
-        marginTop:'2%',
+        marginTop: Platform.OS === 'ios' ? '4%' : '2%',
         textAlign:'center',
         fontSize:15,
     },

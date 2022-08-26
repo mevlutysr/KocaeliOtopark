@@ -1,193 +1,161 @@
-import React, { useContext,useEffect,useState } from 'react';
-import { StyleSheet, Text, View,Image,TouchableHighlight,StatusBar, TouchableOpacity,Alert } from 'react-native';
+import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Image, StatusBar, TouchableHighlight, Platform} from "react-native";
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-import AppContext from '../context/appContext';
+import { setLoader, setLatitude, setLongitude, setEmail } from "../stores/slice";
 import * as Location from 'expo-location';
 import call from 'react-native-phone-call';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Home = () => {
+const Home =()=> {
 
-  const {setLoader,setLatitude,setLongitude,longitude,latitude,setCarData,setEmail,isLogin,setIsLogin,carData} = useContext(AppContext)
-  const navigation = useNavigation();
-
-  useEffect(()=> {
-    const getLocation = async()=>{
-      setLoader(true)
-      let { status } =  await Location.requestForegroundPermissionsAsync();
-
-      if (status !== 'granted') {
-        Alert.alert('Permission to access location was denied');
-        return;
-      }
-
-      let {coords} =  await Location.getCurrentPositionAsync();
-      if (coords){
-        await setLatitude(coords.latitude);
-        await setLongitude(coords.longitude);
-      }
-      const value = await AsyncStorage.getItem('isLogin')
-      setIsLogin(value)
-      
-      setLoader(false)
-      
-  }
-
-    getLocation();
+    const dispatch = useDispatch()
+    const navigation = useNavigation();
     
-  },[])
+    const control = async () => {
 
-  const control = async () => {
-    setTimeout(async ()=> {
-      if(isLogin == "true") {
-        const value = await AsyncStorage.getItem('email')
-          if(value !== null) {
-            setEmail(value)
-            navigation.navigate('KayıtlıUye');
-          }else{
-            navigation.navigate('Profil');
-          }
-      }else{
-        navigation.navigate('Profil');
+        await AsyncStorage.getItem('isLogin').then((isLogin) => {
+            if(isLogin == "true") {
+                AsyncStorage.getItem('email').then((value) => {
+                    if(value !== null) {
+                        dispatch(setEmail(value))
+                        navigation.navigate('KayıtlıUye');
+                      }else{
+                        navigation.navigate('Profil');
+                      }
+                })   
+            }else{
+                navigation.navigate('Profil');
+            }
+        }) 
       }
-    },500)
-    
-  }
-  
-  const getMaps = () => {
-    setLoader(true)
-    console.log("getcar",latitude,longitude)
-    const fet = fetch('', {
-      method: 'POST',
-      headers: {
-        Authorization:'',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      
+    const getMaps = async () => {
+        dispatch(setLoader(true))
         
-        latitude: latitude,
-        longitude: longitude
-      })
-      });
-    fet.then((value) => value.json()).then((json)=> setCarData(json)).catch((error) => console.error(error))
-    setTimeout(()=> {
-      setLoader(false)
-      navigation.navigate("Otopark")
-    },1250)
+        let { status } =  await Location.requestForegroundPermissionsAsync();
     
-  }
+        if (status !== 'granted') {
+          Alert.alert('Permission to access location was denied');
+          return;
+        }
 
-  const ara =()=>{
-    const args = {
-        number:`${153}`, 
-        prompt: true,
-        skipCanOpen: true
+        let {coords} =  await Location.getCurrentPositionAsync();
+        if (coords){
+          dispatch(setLatitude(coords.latitude));
+          dispatch(setLongitude(coords.longitude));
+        }
+        
+        navigation.navigate("Otopark")  
+      }
+    
+      const ara =()=>{
+        const args = {
+            number:`${153}`, 
+            prompt: true,
+            skipCanOpen: true
+        }
+        call(args).catch(console.error)
     }
-    call(args).catch(console.error)
+    return(
+        <View style={styles.container}>
+          <View style={styles.viewConteiner}>
+            <Image source={require('../assets/kocaeli.png')}
+                   style={{width:'65%' , height:'100%' }}
+                   resizeMode="contain"/>
+            <TouchableOpacity onPress={ara} style={{width:Platform.OS ==='ios'? '24%':'20%' , height:90, marginLeft:'10%'}}>
+                <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
+                   style={{flex:2}}
+                   resizeMode="contain"/>
+            </TouchableOpacity> 
+          </View>
+          <>
+            <Image source={{uri: 'https://www.kocaeli.bel.tr/webfiles/userfiles/images/haberler/2018/2018_ocak/2018_01_24/%C4%B0zmit%20Kent%20Meydan%C4%B1%20h%C4%B1zla%20ilerliyor%201.jpg'}}
+                    style={{width:'100%' , height:'35%',marginTop:'2%',marginBottom:'1%' }}/>
+          </>
+          <TouchableHighlight style={styles.touchOtopark}  onPress={getMaps}>      
+            <View style={styles.row}>
+              <Image source={require('../assets/otopark.png')}
+                   style={{width:'20%' , height:'60%',marginLeft:'2%'}} resizeMode="contain"/>
+                   <View style={{justifyContent: 'center',width:'70%'}}><Text style={styles.textOtopark}>OTOPARKLAR</Text></View>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.touchArac}  onPress={() => navigation.navigate('Arac')}>
+            <View style={styles.row}>
+              <Image source={require('../assets/arac.png')}
+                   style={{width:'23%' , height:'65%'}} resizeMode="contain"/>
+              <View style={{justifyContent: 'center',width:'70%'}}><Text style={styles.textArac}>ARACIM NEREYE ÇEKİLDİ ?</Text></View>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.touchProfil}  onPress={control}>
+            <View style={styles.row}>
+              <Image source={require('../assets/profil.png')}
+                   style={{width:'18%' , height:'65%',marginLeft:'2%'}} resizeMode="contain"/>
+              <View style={{justifyContent: 'center',width:'70%'}}><Text style={styles.textProfil}>PROFİLİM</Text></View>
+            </View>
+          </TouchableHighlight  >
+
+          <StatusBar style="auto" />
+        </View>
+    )
 }
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.viewConteiner}>
-      <Image source={{uri: 'https://www.ormanya.com/themes/ormanya/images/kocaeli-bel-logo.png'}}
-             style={{width:'65%' , height:'100%' }}/>
-      <TouchableOpacity onPress={ara} style={{width:'20%' , height:90, marginLeft:'10%'}}>
-          <Image source={{uri: 'https://play-lh.googleusercontent.com/CJyMD0C3z9xFI7CgA7WEgqSgWYtevvXUjlUDOyKU5uFKDcxF77oCgHWeibMyvw0V'}}
-             style={{flex:2}}/>
-      </TouchableOpacity> 
-      </View>
-      <>
-      <Image source={{uri: 'https://www.kocaeli.bel.tr/webfiles/userfiles/images/haberler/2018/2018_ocak/2018_01_24/%C4%B0zmit%20Kent%20Meydan%C4%B1%20h%C4%B1zla%20ilerliyor%201.jpg'}}
-             style={{width:'100%' , height:'40%',marginTop:'2%',marginBottom:'1%' }}/>
-      </>
-      <TouchableHighlight style={styles.touchOtopark}  onPress={getMaps}>      
-      <View style={styles.row}>
-        <Image source={{uri: 'https://bursaelektronet.com/wp-content/uploads/2018/02/497_1.png'}}
-             style={{width:'45%' , height:'70%',marginTop:'3%', }}/>
-             <Text style={styles.textOtopark}>OTOPARKLAR</Text>
-      </View>
-      </TouchableHighlight>
-      <TouchableHighlight style={styles.touchArac}  onPress={() => navigation.navigate('Arac')}>
-      <View style={styles.row}>
-        <Image source={{uri: 'https://freepngclipart.com/thumb/tow_truck/9292-tow-truck-the-hd-photos-thumb.png'}}
-             style={{width:'20%' , height:'70%',marginTop:'3%', marginLeft:'4%'}}/>
-        <Text style={styles.textArac}>ARACIM NEREYE ÇEKİLDİ ?</Text>
-      </View>
-      </TouchableHighlight>
-      <TouchableHighlight style={styles.touchProfil}  onPress={control}>
-      <View style={styles.row}>
-        <Image source={{uri: 'https://cdn-icons-png.flaticon.com/512/16/16363.png'}}
-             style={{width:'20%' , height:'70%',marginTop:'5%', marginLeft:'8%'}}/>
-        <Text style={styles.textProfil}>PROFİLİM</Text>
-      </View>
-      </TouchableHighlight>
-
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  viewConteiner: {
-    marginTop:'2%',
-    marginLeft:'5%',
-    flexDirection:'row',
-  },
-  row: {
-    flexDirection:'row',
-  },
-  touchOtopark: {
-    flex:2,
-    backgroundColor:'#0095FF',
-    width:'100%',
-    height:'10%',
-    marginBottom:'1%',
-    flexDirection:'row',
-  },
-  touchArac: {
-    flex:2,
-    backgroundColor:'#008000',
-    width:'100%',
-    height:'10%',
-    marginBottom:'1%',
-    flexDirection:'row',
-  },
-  touchProfil: {
-    flex:2,
-    backgroundColor:'#FFA500',
-    width:'100%',
-    height:'10%',
-    marginBottom:'1%',
-    flexDirection:'row',
-  },
-  textOtopark:{
-    textAlign:'center',
-    textAlignVertical:'center',
-    fontSize:20,
-    color:'#fff',
-    marginBottom:'2%',
-    marginLeft:'1%',
-  },
-  textArac:{
-    textAlign:'center',
-    textAlignVertical:'center',
-    fontSize:20,
-    color:'#fff',
-    marginLeft:'6%',
-    marginBottom:'2%'
-  },
-  textProfil:{
-    textAlign:'center',
-    textAlignVertical:'center',
-    fontSize:20,
-    color:'#fff',
-    marginLeft:'25%',
-    marginBottom:'2%',
-  },
-});
-
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+    },
+    viewConteiner: {
+      marginTop: Platform.OS ==='ios' ? '7%' : '2%',
+      marginLeft:'5%',
+      flexDirection:'row',
+    },
+    row: {
+      flexDirection:'row',
+      width:'100%',
+      textAlign: 'center',
+      alignItems: 'center',
+    },
+    touchOtopark: {
+      flex:2,
+      backgroundColor:'#0095FF',
+      width:'100%',
+      height:'10%',
+      marginBottom:'1%',
+      flexDirection:'row',
+    },
+    touchArac: {
+      flex:2,
+      backgroundColor:'#008000',
+      width:'100%',
+      height:'10%',
+      marginBottom:'1%',
+      flexDirection:'row',
+    },
+    touchProfil: {
+      flex:2,
+      backgroundColor:'#FFA500',
+      width:'100%',
+      height:'10%',
+      marginBottom:'1%',
+      flexDirection:'row',
+    },
+    textOtopark:{
+      textAlign:'center',
+      textAlignVertical:'center',
+      fontSize: 20,
+      color:'#fff',
+    },
+    textArac:{
+      textAlign:'center',
+      textAlignVertical:'center',
+      fontSize: 20,
+      color:'#fff',
+    },
+    textProfil:{
+      textAlign:'center',
+      textAlignVertical:'center',
+      fontSize: 20,
+      color:'#fff',
+    },
+  });
 export default Home

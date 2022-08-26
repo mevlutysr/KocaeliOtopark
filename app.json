@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Kocaeli Otopark",
-    "slug": "hatabul",
+    "slug": "KocaeliOtopark",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +18,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyDb6EQXx7Z7VF5RS_cgakqXWYXQ36LevXw"
+      },
+      "bundleIdentifier": "com.mevlutysrr.KocaeliOtopark"
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +34,7 @@
           "apiKey": "AIzaSyBRJ8eIxz3cl30zXz_3r3yFg55efC1VEgs"
         }
       },
-      "package": "com.mevlutysr.hatabul"
+      "package": "com.mevlutysrr.KocaeliOtopark"
     },
     "web": {
       "favicon": "./assets/favicon.png"
